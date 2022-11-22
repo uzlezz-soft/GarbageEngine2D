@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{61705900-4DFC-870B-B6AA-880BA255880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GarbageEditor">
+      <UniqueIdentifier>{A06A7DDE-8C63-9C30-B595-81B5A1ED7B3C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\GarbageEngine">
+      <UniqueIdentifier>{EF1731DF-DB10-5031-0443-35B6F09A2F3D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Tools">
+      <UniqueIdentifier>{A1B94F38-8D86-AA43-B69F-98EBA2CBDFD1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\Tools\GarbageHeaderTool">
+      <UniqueIdentifier>{A0E56F4D-8CF5-1B1E-F5AE-803CE1DD0AB7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\.editorconfig">
+      <Filter>..</Filter>
+    </None>
+    <None Include="..\..\GarbageEditor\premake5.lua">
+      <Filter>..\GarbageEditor</Filter>
+    </None>
+    <None Include="..\..\GarbageEngine\premake5.lua">
+      <Filter>..\GarbageEngine</Filter>
+    </None>
+    <None Include="..\..\Tools\GarbageHeaderTool\premake5.lua">
+      <Filter>..\Tools\GarbageHeaderTool</Filter>
+    </None>
+    <None Include="..\..\premake5.lua">
+      <Filter>..</Filter>
+    </None>
+    <None Include="premake5.lua" />
+  </ItemGroup>
+</Project>

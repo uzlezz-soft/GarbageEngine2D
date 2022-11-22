@@ -437,4 +437,4 @@ FodyWeavers.xsd
 ## Specific for Garbage Engine
 
 Bin/
-Intermediate/
+**/Intermediate/

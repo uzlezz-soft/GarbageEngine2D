@@ -37,9 +37,6 @@ project "GarbageHeaderTool"
 		runtime "Release"
 		optimize "Speed"
 
-        kind "SharedLib"
-        staticruntime "off"
-
 	filter "configurations:Shipping"
         defines "NDEBUG"
 

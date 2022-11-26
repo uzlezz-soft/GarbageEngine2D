@@ -13,4 +13,7 @@ public:
 	GPROPERTY();
 	bool Enabled = true;
 
+	GMETHOD();
+	void Play();
+
 };

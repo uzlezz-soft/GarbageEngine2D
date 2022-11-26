@@ -36,6 +36,11 @@ namespace GarbageHeaderTool
 		int64 Column;
 		TokenType Type;
 		std::wstring Lexeme;
+
+		bool operator==(const Token& other) const
+		{
+			return Line == other.Line && Column == other.Column && Type == other.Type;
+		}
 	};
 
 	class Scanner

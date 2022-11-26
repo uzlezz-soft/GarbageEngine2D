@@ -36,7 +36,7 @@ namespace GarbageHeaderTool
 	{
 		std::wstring ReturnType;
 		std::wstring Identifier;
-		std::vector<std::wstring> Arguments;
+		std::vector<std::pair<std::wstring, std::wstring>> Arguments;
 		std::vector<Decorator> Decorators;
 
 		bool HasDecorator(std::wstring_view name) const

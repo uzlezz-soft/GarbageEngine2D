@@ -134,30 +134,6 @@ namespace Utils
 					}
 				}
 			}
-
-			/*if (property.Type == L"int8" || property.Type == L"uint8" || property.Type == L"int16" || property.Type == L"uint16"
-				|| property.Type == L"int32" || property.Type == L"uint32" || property.Type == L"int64" || property.Type == L"uint64"
-				|| property.Type == L"bool" || property.Type == L"float" || property.Type == L"double"
-				|| property.Type == L"char*" || property.Type == L"const char*" || property.Type == L"std::string"
-				|| property.Type == L"std::string_view" || property.Type == L"const std::string" || property.Type == L"const std::string_view"
-				|| property.Type == L"std::string&" || property.Type == L"std::string_view&" || property.Type == L"const std::string&"
-				|| property.Type == L"const std::string_view&" || property.Type == L"int" || property.Type == L"long" || property.Type == L"unsigned"
-				|| property.Type == L"unsigned long" || property.Type == L"long int" || property.Type == L"long long" || property.Type == L"unsigned long long"
-				|| property.Type == L"Vector2" || property.Type == L"Vector3" || property.Type == L"Vector4" || property.Type == L"Color" || property.Type == L"Quaternion")
-			{
-				out << "a << ArchiveManipulator::Key << \"" << property.Identifier << L"\" << ArchiveManipulator::Value << o->*" << typeName << L"::Z_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"();";
-			}
-			else
-			{
-				for (auto& enumerator : enums)
-				{
-					if (property.Type == enumerator.Name)
-					{
-						out << "a << ArchiveManipulator::Key << \"" << property.Identifier << L"\" << ArchiveManipulator::Value << \"" << enumerator.Name << "::\" << o->*" << typeName << L"::Z_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"();";
-						break;
-					}
-				}
-			}*/
 		}
 	}
 
@@ -315,6 +291,11 @@ namespace GarbageHeaderTool
 				for (auto& method : $class.Methods)
 				{
 					std::wcout << "Method in class " << $class.Name << ": " << method.Identifier << L", returns " << method.ReturnType << "\n";
+
+					for (auto& argument : method.Arguments)
+					{
+						std::wcout << "---- " << argument.first << " of type " << argument.second << "\n";
+					}
 				}
 			}
 
@@ -965,6 +946,8 @@ namespace GarbageHeaderTool
 		std::vector<Token>::iterator current;
 		int64 afterIndex = -1;
 
+		auto startIt = m_currentIter;
+
 		do
 		{
 			current = m_tokens.begin();
@@ -993,7 +976,7 @@ namespace GarbageHeaderTool
 			m_currentIter++;
 		} while (current->Type != TokenType::EndOfFile && current->Type != TokenType::SemiColon && current->Type != TokenType::LeftBracket);
 
-		std::vector<std::wstring> arguments;
+		std::vector<std::pair<std::wstring, std::wstring>> arguments;
 		std::wstring returnType;
 
 		Token identifier = GenerateErrorToken();
@@ -1029,30 +1012,39 @@ namespace GarbageHeaderTool
 					
 					do
 					{
+						if (it->Type == TokenType::LeftParen) break;
+
 						it = allTokensBeforeLeftBraceOrSemiColon.begin() + index--;
 
-						int64 argumentStartIndex = -1;
-						std::wstring argument;
+						std::wstring argument = it->Lexeme;
+
+						std::vector<std::wstring> typePieces;
+						it--;
+						index--;
 
 						while (it->Type != TokenType::Comma && it->Type != TokenType::LeftParen)
 						{
-							argumentStartIndex = index--;
-							it = allTokensBeforeLeftBraceOrSemiColon.begin() + index;
+							typePieces.push_back(it->Lexeme);
+							it--;
+							index--;
 						}
 
-						if (argumentStartIndex == -1) break;
+						std::wstring type;
+						for (int32_t i = typePieces.size() - 1; i >= 0; i--) type += typePieces[i];
+
+						arguments.emplace(arguments.begin(), std::make_pair(argument, type));
 					} while (it->Type != TokenType::LeftParen && index > 0);
-					it = allTokensBeforeLeftBraceOrSemiColon.begin() + --index;
+					identifier = *(it - 1);
 
-					identifier = *it;
+					--it;
 
-					int64 identifierIndex = index;
-					index = 0;
-					while (index < identifierIndex)
+					std::vector<std::wstring> pieces;
+					do
 					{
-						it = allTokensBeforeLeftBraceOrSemiColon.begin() + index++;
-						returnType += it->Lexeme;
-					}
+						pieces.push_back((--it)->Lexeme);
+					} while (*it != *startIt);
+
+					for (int32_t i = pieces.size() - 1; i >= 0; i--) returnType += pieces[i];
 
 					break;
 				}

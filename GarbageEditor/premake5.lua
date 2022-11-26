@@ -32,6 +32,11 @@ project "GarbageEditor"
 		"GarbageEngine"
 	}
 
+	prebuildcommands
+	{
+		"%{wks.location}Bin/" .. outputdir .. "/GarbageHeaderTool/GarbageHeaderTool -p%{prj.name} -aGARBAGE_API -s%{prj.location}Source/Public -s%{prj.location}Source/Private -o%{prj.location}Source/Intermediate"
+	}
+
 	filter "system:windows"
 		systemversion "latest"
 

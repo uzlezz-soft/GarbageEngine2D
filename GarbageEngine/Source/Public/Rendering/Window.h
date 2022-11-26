@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
-#include "Core/ActionsQueue.h"
+#include "Core/ActionPool.h"
 #include "Core/Input/Keyboard.h"
 #include "Core/Input/Mouse.h"
 #include "Math/Vector2.h"
@@ -186,7 +186,7 @@ private:
 
     std::string m_title;
 
-    ActionsQueue m_pendingActions;
+    ActionPool m_pendingActions;
     int32 m_threadId;
 
     void OnKeyDown(KeyCode key);

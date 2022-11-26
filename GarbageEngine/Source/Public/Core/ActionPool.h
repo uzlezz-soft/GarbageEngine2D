@@ -5,13 +5,13 @@
 #include <functional>
 #include <mutex>
 
-class ActionsQueue final
+class GARBAGE_API ActionPool final
 {
 public:
 
 	using Action = std::function<void()>;
 
-	ActionsQueue() = default;
+	ActionPool() = default;
 
 	FORCEINLINE void AddAction(Action action)
 	{

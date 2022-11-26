@@ -6,10 +6,7 @@
 #include <cstdint>
 #include <filesystem>
 
-#undef GARBAGE_SHIPPING
-#define GARBAGE_DLL 1
-
-#if GARBAGE_DLL && defined(GARBAGE_PLATFORM_WINDOWS)
+#if !defined(GARBAGE_SHIPPING) && GARBAGE_BUILD_DLL && defined(GARBAGE_PLATFORM_WINDOWS)
 #if defined(GARBAGEENGINE_EXPORTS)
 #define GARBAGE_API __declspec(dllexport)
 #else

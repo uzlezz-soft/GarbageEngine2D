@@ -103,8 +103,6 @@ namespace GarbageHeaderTool
 		inline Token GenerateToken(TokenType type, const std::wstring& lexeme) { return Token{ m_line, m_column, type, lexeme }; }
 		inline Token GenerateErrorToken() { return Token{ -1, -1, TokenType::Error, L"" }; }
 
-
-
 	};
 
 }

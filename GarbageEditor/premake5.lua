@@ -1,4 +1,4 @@
-project "Garbage2DEditor"
+project "GarbageEditor"
     kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++20"

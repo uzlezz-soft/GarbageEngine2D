@@ -2,7 +2,7 @@ include "Dependencies.lua"
 
 workspace "Garbage2D"
     architecture "x86_64"
-    startproject "Garbage2DEditor"
+    startproject "GarbageEditor"
 
     flags { "NoPCH" }
 	
@@ -31,7 +31,7 @@ group ""
 
 group "Core"
     include "GarbageEngine2D"
-    include "Garbage2DEditor"
+    include "GarbageEditor"
 group ""
 
 group "Tools"

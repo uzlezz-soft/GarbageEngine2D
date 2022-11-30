@@ -23,13 +23,16 @@ project "GarbageEditor"
 	includedirs
 	{
 		"Source/Public",
-        "%{wks.location}/GarbageEngine/Source/Public",
-		"%{wks.location}/GarbageEngine/ThirdParty"
+		"Source/Intermediate",
+        "%{wks.location}/GarbageEngine2D/Source/Public",
+        "%{wks.location}/GarbageEngine2D/Source/Intermediate",
+		"%{Include.spdlog}",
 	}
 
 	links
 	{
-		"GarbageEngine2D"
+		"GarbageEngine2D",
+		"spdlog"
 	}
 
 	prebuildcommands

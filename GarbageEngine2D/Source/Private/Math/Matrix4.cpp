@@ -6,7 +6,8 @@
 #include "Core/Assert.h"
 #include <limits>
 
-const Matrix4 Matrix4::Identity = Matrix4(
+GARBAGE_API const Matrix4 Matrix4::Identity = Matrix4
+(
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0,

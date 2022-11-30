@@ -2,14 +2,14 @@
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 
-Vector4 Vector4::Forward = Vector4(1, 0, 0, 0);
-Vector4 Vector4::Backward = Vector4(-1, 0, 0, 0);
-Vector4 Vector4::Right = Vector4(0, 1, 0, 0);
-Vector4 Vector4::Left = Vector4(0, -1, 0, 0);
-Vector4 Vector4::Up = Vector4(0, 0, 1, 0);
-Vector4 Vector4::Down = Vector4(0, 0, -1, 0);
-Vector4 Vector4::One = Vector4(1, 1, 1, 1);
-Vector4 Vector4::Zero = Vector4(0, 0, 0, 0);
+GARBAGE_API Vector4 Vector4::Forward = Vector4(1, 0, 0, 0);
+GARBAGE_API Vector4 Vector4::Backward = Vector4(-1, 0, 0, 0);
+GARBAGE_API Vector4 Vector4::Right = Vector4(0, 1, 0, 0);
+GARBAGE_API Vector4 Vector4::Left = Vector4(0, -1, 0, 0);
+GARBAGE_API Vector4 Vector4::Up = Vector4(0, 0, 1, 0);
+GARBAGE_API Vector4 Vector4::Down = Vector4(0, 0, -1, 0);
+GARBAGE_API Vector4 Vector4::One = Vector4(1, 1, 1, 1);
+GARBAGE_API Vector4 Vector4::Zero = Vector4(0, 0, 0, 0);
 
 Vector4::Vector4(const Vector2& v, float z, float w) : X(v.X), Y(v.Y), Z(z), W(w) {}
 

@@ -4,17 +4,17 @@
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
 
-Color Color::White = Color(1.f, 1.f, 1.f);
-Color Color::Black = Color();
-Color Color::Red = Color(1.f);
-Color Color::Green = Color(0.f, 1.f);
-Color Color::Blue = Color(0.f, 0.f, 1.f);
-Color Color::Cyan = Color(0.f, 1.f, 1.f);
-Color Color::Gray = Color(0.5f, 0.5f, 0.5f);
-Color Color::Magenta = Color(1.f, 0.f, 1.f);
-Color Color::Purple = Color(0.2588f, 0.1098f, 0.3215f);
-Color Color::Yellow = Color(1.f, 0.92f, 0.016f);
-Color Color::Transparent = Color(0.f, 0.f, 0.f, 0.f);
+GARBAGE_API Color Color::White = Color(1.f, 1.f, 1.f);
+GARBAGE_API Color Color::Black = Color();
+GARBAGE_API Color Color::Red = Color(1.f);
+GARBAGE_API Color Color::Green = Color(0.f, 1.f);
+GARBAGE_API Color Color::Blue = Color(0.f, 0.f, 1.f);
+GARBAGE_API Color Color::Cyan = Color(0.f, 1.f, 1.f);
+GARBAGE_API Color Color::Gray = Color(0.5f, 0.5f, 0.5f);
+GARBAGE_API Color Color::Magenta = Color(1.f, 0.f, 1.f);
+GARBAGE_API Color Color::Purple = Color(0.2588f, 0.1098f, 0.3215f);
+GARBAGE_API Color Color::Yellow = Color(1.f, 0.92f, 0.016f);
+GARBAGE_API Color Color::Transparent = Color(0.f, 0.f, 0.f, 0.f);
 
 Color::Color(Vector2 vector, float b, float a) : R(vector.X), G(vector.Y), B(b), A(a) {}
 

@@ -2,12 +2,12 @@
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
 
-Vector2 Vector2::Right = Vector2(1, 0);
-Vector2 Vector2::Left = Vector2(-1, 0);
-Vector2 Vector2::Up = Vector2(0, 1);
-Vector2 Vector2::Down = Vector2(0, -1);
-Vector2 Vector2::Zero = Vector2(0, 0);
-Vector2 Vector2::One = Vector2(1, 1);
+GARBAGE_API Vector2 Vector2::Right = Vector2(1, 0);
+GARBAGE_API Vector2 Vector2::Left = Vector2(-1, 0);
+GARBAGE_API Vector2 Vector2::Up = Vector2(0, 1);
+GARBAGE_API Vector2 Vector2::Down = Vector2(0, -1);
+GARBAGE_API Vector2 Vector2::Zero = Vector2(0, 0);
+GARBAGE_API Vector2 Vector2::One = Vector2(1, 1);
 
 Vector2::Vector2(const Vector3& v) : X(v.X), Y(v.Y) {}
 

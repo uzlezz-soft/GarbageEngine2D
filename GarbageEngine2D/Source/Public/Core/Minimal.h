@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/Core.h"
 #include "Core/Assert.h"
 #include "Core/Registry.h"
 #include "Core/Profiling.h"

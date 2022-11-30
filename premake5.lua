@@ -1,11 +1,11 @@
 include "Dependencies.lua"
 
-workspace "Garbage"
+workspace "Garbage2D"
     architecture "x86_64"
-    startproject "GarbageEditor"
+    startproject "Garbage2DEditor"
 
     flags { "NoPCH" }
-
+	
     configurations
     {
         "Debug",
@@ -30,8 +30,8 @@ group "Dependencies"
 group ""
 
 group "Core"
-    include "GarbageEngine"
-    include "GarbageEditor"
+    include "GarbageEngine2D"
+    include "Garbage2DEditor"
 group ""
 
 group "Tools"

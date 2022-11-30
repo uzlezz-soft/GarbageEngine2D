@@ -34,6 +34,12 @@ group "Core"
     include "GarbageEditor"
 group ""
 
+group "ThirdParty"
+    include "GarbageEngine2D/ThirdParty/glad"
+    include "GarbageEngine2D/ThirdParty/spdlog"
+    include "GarbageEngine2D/ThirdParty/zlib"
+group ""
+
 group "Tools"
     include "Tools/GarbageHeaderTool"
 group ""

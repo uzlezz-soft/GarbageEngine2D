@@ -171,12 +171,6 @@ Texture2D::Texture2D(const Specification& specification) : Texture(GL_TEXTURE_2D
 	if (canGenerateMipmaps)
 	{
 		GLCall(glGenerateMipmap(GL_TEXTURE_2D));
-
-		const float anisoLevel = 16.0f;
-
-		float largestAnisoLevel = 0.0f;
-		GLCall(glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largestAnisoLevel));
-		GLCall(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Math::Clamp(anisoLevel, 0.0f, largestAnisoLevel)));
 	}
 }
 

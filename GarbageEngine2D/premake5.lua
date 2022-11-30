@@ -21,12 +21,18 @@ project "GarbageEngine2D"
 
 	includedirs
 	{
-		"Source/Public"
+		"Source/Public",
+		"%{Include.glad}",
+		"%{Include.spdlog}",
+		"%{Include.zlib}"
 	}
 
 	links
 	{
-		GarbageHeaderTool
+		GarbageHeaderTool,
+		glad,
+		spdlog,
+		zlib
 	}
 
 	prebuildcommands

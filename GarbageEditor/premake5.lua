@@ -29,7 +29,7 @@ project "GarbageEditor"
 
 	links
 	{
-		"GarbageEngine"
+		"GarbageEngine2D"
 	}
 
 	prebuildcommands

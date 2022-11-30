@@ -3,7 +3,6 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #define PLATFORM_WINDOWS
-#define _CRT_SECURE_NO_WARNINGS
 
 #ifdef _WIN64
 	/* Windows x64  */

@@ -243,7 +243,7 @@ Shader::Shader(const std::unordered_map<Type, std::string_view>& sources, const 
 		if (type == Shader::Type::Geometry) GARBAGE_CORE_ASSERT(!compiledShaders.contains(Shader::Type::Fragment), "Shader program already has fragment shader attached! Geometry shader should go first!");
 
 		std::stringstream ss;
-		ss << "#version 430 core\n";
+		ss << "#version 330 core\n";
 		for (auto& parameter : parameters)
 		{
 			ss << "#define " << parameter.first << " " << parameter.second << "\n";

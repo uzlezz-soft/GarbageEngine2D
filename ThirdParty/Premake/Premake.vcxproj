@@ -79,7 +79,10 @@
   <ItemGroup>
     <None Include="..\..\.editorconfig" />
     <None Include="..\..\GarbageEditor\premake5.lua" />
-    <None Include="..\..\GarbageEngine\premake5.lua" />
+    <None Include="..\..\GarbageEngine2D\ThirdParty\glad\premake5.lua" />
+    <None Include="..\..\GarbageEngine2D\ThirdParty\spdlog\premake5.lua" />
+    <None Include="..\..\GarbageEngine2D\ThirdParty\zlib\premake5.lua" />
+    <None Include="..\..\GarbageEngine2D\premake5.lua" />
     <None Include="..\..\Tools\GarbageHeaderTool\premake5.lua" />
     <None Include="..\..\premake5.lua" />
     <None Include="premake5.lua" />

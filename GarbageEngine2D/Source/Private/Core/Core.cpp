@@ -1,7 +1,7 @@
 #include "Core/Core.h"
 #include "Core/Log.h"
 #include "Core/Registry.h"
-#include "GarbageEngineReflection.h"
+#include "GarbageEngine2DReflection.h"
 
 #ifdef GARBAGE_PLATFORM_WINDOWS
 extern "C"
@@ -17,7 +17,7 @@ namespace GarbageEngine
 	void Init()
 	{
 		Log::Init();
-		GarbageEngineReflection::Register();
+		GarbageEngine2DReflection::Register();
 	}
 
 }

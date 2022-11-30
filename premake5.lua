@@ -29,15 +29,15 @@ group "Dependencies"
 	include "ThirdParty/Premake"
 group ""
 
-group "Core"
-    include "GarbageEngine2D"
-    include "GarbageEditor"
-group ""
-
 group "ThirdParty"
     include "GarbageEngine2D/ThirdParty/glad"
     include "GarbageEngine2D/ThirdParty/spdlog"
-    include "GarbageEngine2D/ThirdParty/zlib"
+    include "GarbageEngine2D/ThirdParty/GLFW"
+group ""
+
+group "Core"
+    include "GarbageEngine2D"
+    include "GarbageEditor"
 group ""
 
 group "Tools"

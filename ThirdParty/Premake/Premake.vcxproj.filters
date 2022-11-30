@@ -13,14 +13,14 @@
     <Filter Include="..\GarbageEngine2D\ThirdParty">
       <UniqueIdentifier>{FFC5C51D-6BDE-AC47-348B-3CE1A06241E1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="..\GarbageEngine2D\ThirdParty\GLFW">
+      <UniqueIdentifier>{9E18775F-8A54-7AC9-F366-92C0DFC122E4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="..\GarbageEngine2D\ThirdParty\glad">
       <UniqueIdentifier>{6630895F-526C-8CC9-BB7E-A4C0A7D934E4}</UniqueIdentifier>
     </Filter>
     <Filter Include="..\GarbageEngine2D\ThirdParty\spdlog">
       <UniqueIdentifier>{5701DF82-43E8-A07A-EC38-0798D8FE19E1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="..\GarbageEngine2D\ThirdParty\zlib">
-      <UniqueIdentifier>{9F9C935F-8BD8-96C9-F4EA-AEC0E0453FE4}</UniqueIdentifier>
     </Filter>
     <Filter Include="..\Tools">
       <UniqueIdentifier>{A1B94F38-8D86-AA43-B69F-98EBA2CBDFD1}</UniqueIdentifier>
@@ -36,14 +36,14 @@
     <None Include="..\..\GarbageEditor\premake5.lua">
       <Filter>..\GarbageEditor</Filter>
     </None>
+    <None Include="..\..\GarbageEngine2D\ThirdParty\GLFW\premake5.lua">
+      <Filter>..\GarbageEngine2D\ThirdParty\GLFW</Filter>
+    </None>
     <None Include="..\..\GarbageEngine2D\ThirdParty\glad\premake5.lua">
       <Filter>..\GarbageEngine2D\ThirdParty\glad</Filter>
     </None>
     <None Include="..\..\GarbageEngine2D\ThirdParty\spdlog\premake5.lua">
       <Filter>..\GarbageEngine2D\ThirdParty\spdlog</Filter>
-    </None>
-    <None Include="..\..\GarbageEngine2D\ThirdParty\zlib\premake5.lua">
-      <Filter>..\GarbageEngine2D\ThirdParty\zlib</Filter>
     </None>
     <None Include="..\..\GarbageEngine2D\premake5.lua">
       <Filter>..\GarbageEngine2D</Filter>

@@ -153,7 +153,7 @@ namespace Utils
 		std::stringstream ss;
 		std::string preprocessedSource = PreprocessSource(source);
 		if (preprocessedSource == "ERROR") return -1;
-		ss << "#version 430 core\n#define " << readyStringType << "\n" << commonShaderInclude << "\n" << preprocessedSource;
+		ss << "#version 330 core\n#define " << readyStringType << "\n" << commonShaderInclude << "\n" << preprocessedSource;
 		std::string newSource = ss.str();
 
 		static uint32 n = 0;

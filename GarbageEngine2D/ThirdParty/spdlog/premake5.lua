@@ -10,7 +10,8 @@ project "spdlog"
 
 	defines
 	{
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
+		"SPDLOG_COMPILED_LIB"
 	}
 
 	files

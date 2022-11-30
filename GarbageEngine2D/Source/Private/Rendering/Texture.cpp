@@ -166,7 +166,9 @@ Texture2D::Texture2D(const Specification& specification) : Texture(GL_TEXTURE_2D
 {
 	bool canGenerateMipmaps = Setup(specification);
 
-	GLCall(glTexStorage2D(GL_TEXTURE_2D, canGenerateMipmaps ? GetNumberOfMipLevels(specification.Width, specification.Height) : 1, GetInternalFormat(), GetWidth(), GetHeight()));
+	//GLCall(glTexStorage2D(GL_TEXTURE_2D, canGenerateMipmaps ? GetNumberOfMipLevels(specification.Width, specification.Height) : 1, GetInternalFormat(), GetWidth(), GetHeight()));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, canGenerateMipmaps ? GetNumberOfMipLevels(specification.Width, specification.Height) : 1,
+		GetInternalFormat(), GetWidth(), GetHeight(), 0, GetConvertedFormat(), GL_UNSIGNED_BYTE, nullptr));
 	if (specification.Data) SetData(specification.Data, GetWidth() * GetHeight() * GetTextureFormatSize(specification.Format));
 	if (canGenerateMipmaps)
 	{

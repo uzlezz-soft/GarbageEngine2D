@@ -51,7 +51,8 @@ static void AttachDepthTexture(uint32 id, uint64 samples, uint32 format, uint32 
 	}
 	else
 	{
-		GLCall(glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height));
+		//GLCall(glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height));
+		glTexImage2D(GL_TEXTURE_2D, 1, format, width, height, 0, GL_RGB, GL_UNSIGNED_INT, nullptr);
 
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filtering));
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filtering));

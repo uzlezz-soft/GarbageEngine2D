@@ -1,6 +1,6 @@
 #include "Core/Compressor.h"
 #include "Core/Assert.h"
-#pragma warning(push, 0)
+/*#pragma warning(push, 0)
 #include <zlib/zlib.h>
 #pragma warning(pop)
 
@@ -15,10 +15,10 @@ static int GarbageEngineCompressionLevelToZLibCompressionLevel(Compressor::Level
 
     GARBAGE_CORE_ASSERT(level == Compressor::Level::Default || level == Compressor::Level::BestSpeed || level == Compressor::Level::BestCompression);
     return -1;
-}
+}*/
 
-Compressor::Data Compressor::Compress(const void* data, uint64 size, Level level /*= Compressor::level::BestCompression */)
-{
+//Compressor::Data Compressor::Compress(const void* data, uint64 size, Level level /*= Compressor::level::BestCompression */)
+/*{
     uint64 compressedDataSize = compressBound(size);
     void* compressedData = new void*[compressedDataSize];
     if (!compressedData)
@@ -55,4 +55,4 @@ Compressor::Data Compressor::Decompress(const void* data, uint64 size, uint64 de
     }
 
     return result;
-}
+}*/

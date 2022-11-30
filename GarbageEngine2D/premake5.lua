@@ -22,9 +22,10 @@ project "GarbageEngine2D"
 	includedirs
 	{
 		"Source/Public",
+		"Source/Intermediate",
 		"%{Include.glad}",
 		"%{Include.spdlog}",
-		"%{Include.zlib}"
+		"%{Include.GLFW}"
 	}
 
 	links
@@ -32,7 +33,7 @@ project "GarbageEngine2D"
 		GarbageHeaderTool,
 		glad,
 		spdlog,
-		zlib
+		GLFW
 	}
 
 	prebuildcommands

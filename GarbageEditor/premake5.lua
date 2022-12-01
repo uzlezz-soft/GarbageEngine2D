@@ -42,7 +42,7 @@ project "GarbageEditor"
 
 	postbuildcommands
 	{
-		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.dll %{wks.location}Bin/" .. outputdir .. "/GarbageEditor"
+		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.dll %{wks.location}Bin/" .. outputdir .. "/GarbageEditor",
 		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.so %{wks.location}Bin/" .. outputdir .. "/GarbageEditor"
 	}
 

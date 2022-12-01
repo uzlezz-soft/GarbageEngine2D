@@ -185,17 +185,17 @@ Vector2 Vector2::ProjectedOnNormal(const Vector2& normal) const
 
 Vector2 Vector2::Floor() const
 {
-	return Vector2(Math::Floor(X), Math::Floor(Y));
+	return Vector2((float)Math::Floor(X), (float)Math::Floor(Y));
 }
 
 Vector2 Vector2::Ceil() const
 {
-	return Vector2(Math::Ceil(X), Math::Ceil(Y));
+	return Vector2((float)Math::Ceil(X), (float)Math::Ceil(Y));
 }
 
 Vector2 Vector2::Round() const
 {
-	return Vector2(Math::Round(X), Math::Round(Y));
+	return Vector2((float)Math::Round(X), (float)Math::Round(Y));
 }
 
 Vector2 Vector2::Min(const Vector2& other) const

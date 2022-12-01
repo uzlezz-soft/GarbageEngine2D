@@ -197,17 +197,17 @@ Vector4 Vector4::ProjectedOnNormal(const Vector4& normal) const
 
 Vector4 Vector4::Floor() const
 {
-	return Vector4(Math::Floor(X), Math::Floor(Y), Math::Floor(Z), Math::Floor(W));
+	return Vector4((float)Math::Floor(X), (float)Math::Floor(Y), (float)Math::Floor(Z), (float)Math::Floor(W));
 }
 
 Vector4 Vector4::Ceil() const
 {
-	return Vector4(Math::Ceil(X), Math::Ceil(Y), Math::Ceil(Z), Math::Ceil(W));
+	return Vector4((float)Math::Ceil(X), (float)Math::Ceil(Y), (float)Math::Ceil(Z), (float)Math::Ceil(W));
 }
 
 Vector4 Vector4::Round() const
 {
-	return Vector4(Math::Round(X), Math::Round(Y), Math::Round(Z), Math::Round(W));
+	return Vector4((float)Math::Round(X), (float)Math::Round(Y), (float)Math::Round(Z), (float)Math::Round(W));
 }
 
 Vector4 Vector4::Min(const Vector4& other) const

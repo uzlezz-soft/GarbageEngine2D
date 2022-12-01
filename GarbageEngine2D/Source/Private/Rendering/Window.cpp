@@ -209,7 +209,7 @@ void Window::Center() noexcept
     auto videoMode = m_monitor.GetVideoMode();
     auto size = GetSize();
 
-    DO_SOME_MAGIC(glfwSetWindowPos(reinterpret_cast<GLFWwindow*>(m_handle), (videoMode.Size.X - size.X) / 2, (videoMode.Size.Y - size.Y) / 2), this, videoMode, size);
+    DO_SOME_MAGIC(glfwSetWindowPos(reinterpret_cast<GLFWwindow*>(m_handle), (int)(videoMode.Size.X - size.X) / 2, (int)(videoMode.Size.Y - size.Y) / 2), this, videoMode, size);
 }
 
 void Window::AllowResize() noexcept
@@ -224,7 +224,7 @@ void Window::DeclineResize() noexcept
 
 void Window::Resize(Vector2 newSize) noexcept
 {
-    DO_SOME_MAGIC(glfwSetWindowSize(reinterpret_cast<GLFWwindow*>(m_handle), newSize.X, newSize.Y), this, newSize);
+    DO_SOME_MAGIC(glfwSetWindowSize(reinterpret_cast<GLFWwindow*>(m_handle), (int)newSize.X, (int)newSize.Y), this, newSize);
 }
 
 bool Window::IsVisible() const noexcept
@@ -249,7 +249,7 @@ Vector2 Window::GetSize() const noexcept
 
     glfwGetWindowSize(reinterpret_cast<GLFWwindow*>(m_handle), &width, &height);
 
-    return Vector2(width, height);
+    return Vector2((float)width, (float)height);
 }
 
 Vector2 Window::GetFramebufferSize() const noexcept

@@ -11,7 +11,6 @@
 #pragma warning(push, 0)
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
-#pragma warning(pop)
 
 class GARBAGE_API Log
 {
@@ -28,6 +27,8 @@ private:
 	static Ref<spdlog::logger> s_clientLogger;
 
 };
+
+#pragma warning(pop)
 
 template<typename OStream>
 OStream& operator<<(OStream& os, const Vector2& vec)
@@ -68,14 +69,14 @@ OStream& operator<<(OStream& os, const Color& color)
 	return os << "[R" << color.R << " G" << color.G << " B" << color.B << " A" << color.A << "]";
 }
 
-#define GARBAGE_CORE_DEBUG(...) ::Log::GetCoreLogger()->debug(__VA_ARGS__)
+#define GARBAGE_CORE_DEBUG_(...) ::Log::GetCoreLogger()->debug(__VA_ARGS__)
 #define GARBAGE_CORE_TRACE(...) ::Log::GetCoreLogger()->trace(__VA_ARGS__)
 #define GARBAGE_CORE_INFO(...)  ::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define GARBAGE_CORE_WARN(...)  ::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define GARBAGE_CORE_ERROR(...) ::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define GARBAGE_CORE_FATAL(...) ::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
-#define GARBAGE_DEBUG(...) ::Log::GetClientLogger()->debug(__VA_ARGS__)
+#define GARBAGE_DEBUG_(...) ::Log::GetClientLogger()->debug(__VA_ARGS__)
 #define GARBAGE_TRACE(...) ::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define GARBAGE_INFO(...)  ::Log::GetClientLogger()->info(__VA_ARGS__)
 #define GARBAGE_WARN(...)  ::Log::GetClientLogger()->warn(__VA_ARGS__)

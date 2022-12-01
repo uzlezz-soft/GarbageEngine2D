@@ -198,17 +198,17 @@ Vector3 Vector3::ProjectedOnNormal(const Vector3& normal) const
 
 Vector3 Vector3::Floor() const
 {
-	return Vector3(Math::Floor(X), Math::Floor(Y), Math::Floor(Z));
+	return Vector3((float)Math::Floor(X), (float)Math::Floor(Y), (float)Math::Floor(Z));
 }
 
 Vector3 Vector3::Ceil() const
 {
-	return Vector3(Math::Ceil(X), Math::Ceil(Y), Math::Ceil(Z));
+	return Vector3((float)Math::Ceil(X), (float)Math::Ceil(Y), (float)Math::Ceil(Z));
 }
 
 Vector3 Vector3::Round() const
 {
-	return Vector3(Math::Round(X), Math::Round(Y), Math::Round(Z));
+	return Vector3((float)Math::Round(X), (float)Math::Round(Y), (float)Math::Round(Z));
 }
 
 Vector3 Vector3::Min(const Vector3& other) const

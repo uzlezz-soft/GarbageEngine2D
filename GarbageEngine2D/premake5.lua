@@ -38,6 +38,8 @@ project "GarbageEngine2D"
 		"stb"
 	}
 
+	disablewarnings { "4251", "4005" }
+
 	prebuildcommands
 	{
 		"%{wks.location}Bin/" .. outputdir .. "/GarbageHeaderTool/GarbageHeaderTool -p%{prj.name} -aGARBAGE_API -s%{prj.location}Source/Public -s%{prj.location}Source/Private -o%{prj.location}Source/Intermediate"

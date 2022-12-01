@@ -131,7 +131,7 @@ void Renderer::Init()
 	s_lines.reserve(50);
 	s_lines.push_back({ Vector3::Zero, Color::White, Vector3::One, Color::White });
 
-	s_linesBuffer.reset(new VertexBuffer(s_lines.data(), s_lines.size() * sizeof(RendererLocal::LineBatchData), (uint32)s_lines.size() * 2, true));
+	s_linesBuffer.reset(new VertexBuffer(s_lines.data(), (uint32)(s_lines.size() * sizeof(RendererLocal::LineBatchData)), (uint32)s_lines.size() * 2, true));
 
 	VertexBufferLayout linesDataLayout;
 	linesDataLayout.Push<Vector3>(1);
@@ -154,7 +154,7 @@ void Renderer::Clear()
 
 void Renderer::SetViewportSize(Vector2 viewportSize)
 {
-	glViewport(0, 0, viewportSize.X, viewportSize.Y);
+	glViewport(0, 0, (int)viewportSize.X, (int)viewportSize.Y);
 }
 
 void Renderer::BeginNewFrame(const Matrix4& projection, const Matrix4& view)
@@ -180,7 +180,7 @@ void Renderer::EndFrame()
 	if (s_numberOfLines > 0)
 	{
 		s_linesBuffer->Bind();
-		s_linesBuffer->UpdateData(s_lines.data(), s_lines.size() * sizeof(RendererLocal::LineBatchData));
+		s_linesBuffer->UpdateData(s_lines.data(), (uint32)(s_lines.size() * sizeof(RendererLocal::LineBatchData)));
 
 		EnableFeature(Renderer::Feature::AlphaBlending);
 		DisableFeature(Renderer::Feature::WriteToDepthBuffer);

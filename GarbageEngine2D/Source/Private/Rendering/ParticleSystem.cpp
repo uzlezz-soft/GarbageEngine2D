@@ -110,8 +110,8 @@ ParticleSystemProxy::ParticleSystemProxy(const ParticleSystem& particleSystem) :
 	m_positionsSizes.push_back({ 0.0f, 0.0f, 0.0f, 0.0f });
 	m_colors.push_back({ 0.0f, 0.0f, 0.0f, 1.0f });
 
-	m_positionsBuffer.reset(new VertexBuffer(m_positionsSizes.data(), m_positionsSizes.size() * sizeof(Vector4), (uint32)m_positionsSizes.size(), true));
-	m_colorsBuffer.reset(new VertexBuffer(m_colors.data(), m_colors.size() * sizeof(Vector4), (uint32)m_colors.size(), true));
+	m_positionsBuffer.reset(new VertexBuffer(m_positionsSizes.data(), (uint32)(m_positionsSizes.size() * sizeof(Vector4)), (uint32)m_positionsSizes.size(), true));
+	m_colorsBuffer.reset(new VertexBuffer(m_colors.data(), (uint32)(m_colors.size() * sizeof(Vector4)), (uint32)m_colors.size(), true));
 
 	VertexBufferLayout positionsDataLayout;
 	positionsDataLayout.Push<Vector4>(1);

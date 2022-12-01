@@ -25,7 +25,8 @@ project "GarbageEngine2D"
 		"Source/Intermediate",
 		"%{Include.glad}",
 		"%{Include.spdlog}",
-		"%{Include.GLFW}"
+		"%{Include.GLFW}",
+		"%{Include.stb}"
 	}
 
 	links
@@ -33,7 +34,8 @@ project "GarbageEngine2D"
 		"GarbageHeaderTool",
 		"glad",
 		"spdlog",
-		"GLFW"
+		"GLFW",
+		"stb"
 	}
 
 	prebuildcommands

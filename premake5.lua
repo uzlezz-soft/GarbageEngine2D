@@ -33,6 +33,7 @@ group "ThirdParty"
     include "GarbageEngine2D/ThirdParty/glad"
     include "GarbageEngine2D/ThirdParty/spdlog"
     include "GarbageEngine2D/ThirdParty/GLFW"
+    include "GarbageEngine2D/ThirdParty/stb"
 group ""
 
 group "Core"

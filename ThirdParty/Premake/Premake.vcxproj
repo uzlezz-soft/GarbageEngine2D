@@ -82,6 +82,7 @@
     <None Include="..\..\GarbageEngine2D\ThirdParty\GLFW\premake5.lua" />
     <None Include="..\..\GarbageEngine2D\ThirdParty\glad\premake5.lua" />
     <None Include="..\..\GarbageEngine2D\ThirdParty\spdlog\premake5.lua" />
+    <None Include="..\..\GarbageEngine2D\ThirdParty\stb\premake5.lua" />
     <None Include="..\..\GarbageEngine2D\premake5.lua" />
     <None Include="..\..\Tools\GarbageHeaderTool\premake5.lua" />
     <None Include="..\..\premake5.lua" />

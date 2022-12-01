@@ -22,6 +22,9 @@
     <Filter Include="..\GarbageEngine2D\ThirdParty\spdlog">
       <UniqueIdentifier>{5701DF82-43E8-A07A-EC38-0798D8FE19E1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="..\GarbageEngine2D\ThirdParty\stb">
+      <UniqueIdentifier>{D76B4277-43DA-97F6-8CC3-52F6F8708D92}</UniqueIdentifier>
+    </Filter>
     <Filter Include="..\Tools">
       <UniqueIdentifier>{A1B94F38-8D86-AA43-B69F-98EBA2CBDFD1}</UniqueIdentifier>
     </Filter>
@@ -44,6 +47,9 @@
     </None>
     <None Include="..\..\GarbageEngine2D\ThirdParty\spdlog\premake5.lua">
       <Filter>..\GarbageEngine2D\ThirdParty\spdlog</Filter>
+    </None>
+    <None Include="..\..\GarbageEngine2D\ThirdParty\stb\premake5.lua">
+      <Filter>..\GarbageEngine2D\ThirdParty\stb</Filter>
     </None>
     <None Include="..\..\GarbageEngine2D\premake5.lua">
       <Filter>..\GarbageEngine2D</Filter>

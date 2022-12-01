@@ -24,20 +24,26 @@ project "GarbageEditor"
 	{
 		"Source/Public",
 		"Source/Intermediate",
-        "%{wks.location}/GarbageEngine2D/Source/Public",
-        "%{wks.location}/GarbageEngine2D/Source/Intermediate",
 		"%{Include.spdlog}",
+        "%{wks.location}/GarbageEngine2D/Source/Public",
+        "%{wks.location}/GarbageEngine2D/Source/Intermediate"
 	}
 
 	links
 	{
-		"GarbageEngine2D",
-		"spdlog"
+		"spdlog",
+		"GarbageEngine2D"
 	}
 
 	prebuildcommands
 	{
 		"%{wks.location}Bin/" .. outputdir .. "/GarbageHeaderTool/GarbageHeaderTool -p%{prj.name} -aNO_API -s%{prj.location}Source/Public -s%{prj.location}Source/Private -o%{prj.location}Source/Intermediate"
+	}
+
+	postbuildcommands
+	{
+		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.dll %{wks.location}Bin/" .. outputdir .. "/GarbageEditor"
+		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.so %{wks.location}Bin/" .. outputdir .. "/GarbageEditor"
 	}
 
 	filter "system:windows"

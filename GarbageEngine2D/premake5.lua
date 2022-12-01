@@ -59,17 +59,6 @@ project "GarbageEngine2D"
 			"%{Library.WinVersion}",
 			"%{Library.BCrypt}",
 		}
-		
-		postbuildcommands
-		{
-			"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/GarbageEngine2D.dll %{wks.location}Bin/" .. outputdir .. "/GarbageEditor/GarbageEngine2D.dll"
-		}
-		
-	filter "system:linux"
-		postbuildcommands
-		{
-			"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/GarbageEngine2D.so %{wks.location}Bin/" .. outputdir .. "/GarbageEditor/GarbageEngine2D.so"
-		}
 
 	filter "configurations:Debug"
 		defines

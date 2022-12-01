@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	if (pathsToScanFor.empty())
+	if (pathsToScanFor_.empty())
 	{
 		std::cerr << "Please, specify at least one scan path with -sSCAN_PATH!\n";
 		return EXIT_FAILURE;

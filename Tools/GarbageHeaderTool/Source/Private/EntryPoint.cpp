@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 static std::wstring StringToWideString(const std::string& string)
 {
@@ -42,6 +43,7 @@ int main(int argc, char** argv)
 {
 	Timer timer;
 
+	std::vector<std::filesystem::path> pathsToScanFor_;
 	std::vector<std::filesystem::path> pathsToScanFor;
 	std::filesystem::path pathToOutputGeneratedStuff = L"";
 	std::wstring projectName;
@@ -58,7 +60,7 @@ int main(int argc, char** argv)
 	{
 		std::string arg = argv[i];
 
-		if (arg.starts_with("-s")) pathsToScanFor.push_back(arg.substr(2));
+		if (arg.starts_with("-s")) pathsToScanFor_.push_back(arg.substr(2));
 		else if (arg.starts_with("-o")) pathToOutputGeneratedStuff = arg.substr(2);
 		else if (arg.starts_with("-p")) projectName = StringToWideString(arg.substr(2));
 		else if (arg.starts_with("-force")) forceGenerate = true;
@@ -82,12 +84,13 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	for (auto& scanPath : pathsToScanFor)
+	for (auto& scanPath : pathsToScanFor_)
 	{
-		if (!std::filesystem::exists(scanPath))
+		if (std::filesystem::exists(scanPath))
 		{
-			std::wcerr << L"Scan path " << scanPath << L" not exist!" << std::endl;
-			return EXIT_FAILURE;
+			//std::wcerr << L"Scan path " << scanPath << L" not exist!" << std::endl;
+			//return EXIT_FAILURE;
+			pathsToScanFor.push_back(scanPath);
 		}
 	}
 

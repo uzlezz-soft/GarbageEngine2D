@@ -1,12 +1,32 @@
-#include "Core/Minimal.h"
+#include "Editor/Core.h"
 #include "Math/Vector2.h"
-#include <Rendering/Window.h>
-#include <Rendering/Renderer.h>
+#include "Rendering/Window.h"
+#include "Rendering/Renderer.h"
+#include "Core/FileSystem/PhysicalFileSystem.h"
+#include "Core/Utils.h"
+#include "Core/Asset/AssetManager.h"
+#include <Core/Asset/Texture2D.h>
 
 int main()
 {
-	GarbageEngine::Init();
+	GarbageEditor::Init();
 	Window::InitSubsystem();
+
+	Ref<FileSystem> fileSystem = MakeRef<PhysicalFileSystem>();
+	((PhysicalFileSystem*)fileSystem.get())->SetWorkingDirectory("C:/Users/User/Desktop/Assets");
+
+	AssetManager::Init(fileSystem);
+
+	for (auto& entry : *fileSystem)
+	{
+		auto asset = AssetManager::LoadAsset(entry.Path);
+		if (asset && asset->IsA<Texture2DAsset>())
+		{
+			Texture2DAsset* textureAsset = (Texture2DAsset*)asset.get();
+
+			GARBAGE_INFO("Texture: {} ({}x{}x{})", asset->GetName(), textureAsset->GetSize().X, textureAsset->GetSize().Y, textureAsset->GetNumberOfColorChannels());
+		}
+	}
 
 	Window::Context context;
 	Window window(context);

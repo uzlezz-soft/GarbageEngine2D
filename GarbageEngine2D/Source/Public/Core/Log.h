@@ -18,8 +18,8 @@ public:
 
 	static void Init();
 
-	FORCEINLINE static Ref<spdlog::logger> GetCoreLogger() { return s_coreLogger; }
-	FORCEINLINE static Ref<spdlog::logger> GetClientLogger() { return s_clientLogger; }
+	static Ref<spdlog::logger> GetCoreLogger() { return s_coreLogger; }
+	static Ref<spdlog::logger> GetClientLogger();
 
 private:
 

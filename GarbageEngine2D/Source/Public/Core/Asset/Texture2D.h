@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.h"
+#include "Core/Asset/Asset.h"
 #include "Texture2D.generated.h"
 
 GCLASS();
@@ -10,7 +11,17 @@ class GARBAGE_API Texture2DAsset final : public Asset
 
 public:
 
+	Vector2 GetSize() const { return m_size; }
+	uint8 GetNumberOfColorChannels() const { return m_numberOfColorChannels; }
+	std::string_view GetData() const { return m_data; }
 
+private:
+
+	friend class Texture2DAssetFactory;
+
+	Vector2 m_size;
+	uint8 m_numberOfColorChannels;
+	std::string m_data;
 
 };
 
@@ -21,7 +32,7 @@ class GARBAGE_API Texture2DAssetFactory final : public AssetFactory
 
 public:
 
-	bool CreateFromSourceAsset(Asset* output, std::istream& stream, std::string_view sourceFileExtension) override { return false; }
+	bool CreateFromSourceAsset(Asset* output, File* stream, std::string_view sourceFileExtension) override;
 	void Serialize(Asset* asset, std::ostream& stream) override {}
 	void Deserialize(Asset* asset, std::istream& stream) override {}
 

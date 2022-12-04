@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Minimal.h"
+#include "Core/FileSystem/FileSystem.h"
 #include <iosfwd>
 #include <filesystem>
 #include "Asset.generated.h"
@@ -20,7 +21,7 @@ public:
 
 	const std::filesystem::path& GetSourcePath() const { return m_sourcePath; }
 	const std::filesystem::path& GetPath() const { return m_path; }
-	std::string_view GetName() const { return m_name; }
+	const std::filesystem::path& GetName() const { return m_name; }
 
 private:
 
@@ -31,7 +32,7 @@ private:
 	GPROPERTY();
 	std::filesystem::path m_path;
 	GPROPERTY();
-	std::string m_name;
+	std::filesystem::path m_name;
 	GPROPERTY();
 	uint64 m_uuid;
 
@@ -44,7 +45,7 @@ class GARBAGE_API AssetFactory : public ObjectBase
 
 public:
 
-	virtual bool CreateFromSourceAsset(Asset* output, std::istream& stream, std::string_view sourceFileExtension) CORE_PURE_VIRTUAL(return false);
+	virtual bool CreateFromSourceAsset(Asset* output, File* stream, std::string_view sourceFileExtension) CORE_PURE_VIRTUAL(return false);
 	virtual void Serialize(Asset* asset, std::ostream& stream) CORE_PURE_VIRTUAL();
 	virtual void Deserialize(Asset* asset, std::istream& stream) CORE_PURE_VIRTUAL();
 

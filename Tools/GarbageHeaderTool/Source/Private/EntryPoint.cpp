@@ -64,6 +64,7 @@ int main(int argc, char** argv)
 		else if (arg.starts_with("-o")) pathToOutputGeneratedStuff = arg.substr(2);
 		else if (arg.starts_with("-p")) projectName = StringToWideString(arg.substr(2));
 		else if (arg.starts_with("-force")) forceGenerate = true;
+		else if (arg.starts_with("-a")) projectApi = StringToWideString(arg.substr(2));
 	}
 
 	if (pathToOutputGeneratedStuff.empty())
@@ -82,6 +83,11 @@ int main(int argc, char** argv)
 	{
 		std::cerr << "Please, specify project name with -pPROJECT_NAME!\n";
 		return EXIT_FAILURE;
+	}
+
+	if (projectApi.empty())
+	{
+		projectApi = L"NO_API";
 	}
 
 	for (auto& scanPath : pathsToScanFor_)
@@ -170,7 +176,7 @@ int main(int argc, char** argv)
 							std::wstring fileId;
 
 							std::wofstream out(outputPath);
-							out << parser.GenerateHeaderFile(fileId, scanPath);
+							out << parser.GenerateHeaderFile(fileId, scanPath, projectApi);
 							out.close();
 
 							std::wstring relativeFilePath = std::filesystem::relative(path, scanPath).generic_wstring();

@@ -44,6 +44,13 @@ project "GarbageEngine2D"
 	{
 		"%{wks.location}Bin/" .. outputdir .. "/GarbageHeaderTool/GarbageHeaderTool -p%{prj.name} -aGARBAGE_API -s%{prj.location}Source/Public -s%{prj.location}Source/Private -o%{prj.location}Source/Intermediate"
 	}
+	
+	postbuildcommands
+	{
+		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.dll %{wks.location}Bin/" .. outputdir .. "/GarbageEditor",
+		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.so %{wks.location}Bin/" .. outputdir .. "/GarbageEditor",
+		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.pdb %{wks.location}Bin/" .. outputdir .. "/GarbageEditor"
+	}
 
 	filter "system:windows"
 		systemversion "latest"

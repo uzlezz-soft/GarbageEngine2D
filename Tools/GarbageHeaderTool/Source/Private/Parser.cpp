@@ -219,7 +219,7 @@ namespace GarbageHeaderTool
 		return fileName;
 	}
 
-	std::wstring Parser::GenerateHeaderFile(std::wstring& outFileId, const std::filesystem::path& outputPath)
+	std::wstring Parser::GenerateHeaderFile(std::wstring& outFileId, const std::filesystem::path& outputPath, std::wstring_view projectApi)
 	{
 		std::wostringstream out;
 
@@ -474,12 +474,12 @@ namespace GarbageHeaderTool
 #ifdef USE_NEW_SYSTEM_THAT_DOESNT_SHIT_IN_INTELLISENSE
 		for (auto& $class : m_classes)
 		{
-			out << L"const Meta::Type* Z_" << $class.Name << L"_" << fileId << "_GET_TYPE();\n";
+			out << L"extern \"C\" " << projectApi << L" const Meta::Type* Z_" << $class.Name << L"_" << fileId << "_GET_TYPE();\n";
 		}
 
 		for (auto& structure : m_structs)
 		{
-			out << L"const Meta::Type* Z_" << structure.Name << L"_" << fileId << "_GET_TYPE();\n";
+			out << L"extern \"C\" " << projectApi << L" const Meta::Type * Z_" << structure.Name << L"_" << fileId << "_GET_TYPE(); \n";
 		}
 #endif
 
@@ -543,11 +543,11 @@ namespace GarbageHeaderTool
 
 			out << L" \\\npublic: virtual const Meta::Type* GetType() const override { return GetStaticType(); }";
 			out << L" \\\nstatic const Meta::Type* GetStaticType() { return Z_" << $class.Name << L"_" << fileId << "_GET_TYPE(); }";
-			out << L" \\\nvirtual ~" << $class.Name << "() = default;";
+			out << L" \\\nvirtual ~" << $class.Name << L"() = default;";
 
 			for (auto& property : $class.Properties)
 			{
-				out << L" \\\nfriend void* ObjectBase::* Z_" << $class.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"();"; // { return (void* ObjectBase::*)&" << $class.Name << L"::" << property.Identifier << L"; }";
+				out << L" \\\nfriend " << projectApi << L" void* ObjectBase::* Z_" << $class.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"();"; // { return (void* ObjectBase::*)&" << $class.Name << L"::" << property.Identifier << L"; }";
 			}
 
 			out << L"\n\n";
@@ -566,7 +566,7 @@ namespace GarbageHeaderTool
 
 				for (auto& property : structure.Properties)
 				{
-					out << L" \\\nfriend void* ObjectBase::* Z_" << structure.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"();"; // { return (void* ObjectBase::*)&" << $class.Name << L"::" << property.Identifier << L"; }";
+					out << L" \\\nfriend " << projectApi << L" void* ObjectBase::* Z_" << structure.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"();"; // { return (void* ObjectBase::*)&" << $class.Name << L"::" << property.Identifier << L"; }";
 				}
 
 				out << L" public:\n\n";
@@ -577,11 +577,11 @@ namespace GarbageHeaderTool
 
 			for (auto& structure : m_structs)
 			{
-				out << L" \\\nconst Meta::Type* Z_" << structure.Name << L"_" << fileId << "_GET_TYPE() { static const Meta::Type* _t = Meta::Registry::Get().FindType(\"" << structure.Name << L"\"); return _t; }";
+				out << L" \\\nextern \"C\" " << projectApi <<  " const Meta::Type* Z_" << structure.Name << L"_" << fileId << "_GET_TYPE() { static const Meta::Type* _t = Meta::Registry::Get().FindType(\"" << structure.Name << L"\"); return _t; }";
 
 				for (auto& property : structure.Properties)
 				{
-					out << L" \\\nvoid* ObjectBase::* Z_" << structure.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"() { return (void* ObjectBase::*)&" << structure.Name << L"::" << property.Identifier << L"; }";
+					out << L" \\\n" << projectApi << " void* ObjectBase::* Z_" << structure.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"() { return (void* ObjectBase::*)&" << structure.Name << L"::" << property.Identifier << L"; }";
 				}
 			}
 		}
@@ -592,11 +592,11 @@ namespace GarbageHeaderTool
 
 		for (auto& $class : m_classes)
 		{
-			out << L" \\\nconst Meta::Type* Z_" << $class.Name << L"_" << fileId << "_GET_TYPE() { static const Meta::Type* _t = Meta::Registry::Get().FindType(\"" << $class.Name << L"\"); return _t; }";
+			out << L" \\\nextern \"C\" " << projectApi << " const Meta::Type* Z_" << $class.Name << L"_" << fileId << "_GET_TYPE() { static const Meta::Type* _t = Meta::Registry::Get().FindType(\"" << $class.Name << L"\"); return _t; }";
 
 			for (auto& property : $class.Properties)
 			{
-				out << L" \\\nvoid* ObjectBase::* Z_" << $class.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"() { return (void* ObjectBase::*)&" << $class.Name << L"::" << property.Identifier << L"; }";
+				out << L" \\\n" << projectApi << " void* ObjectBase::* Z_" << $class.Name << L"_" << fileId << L"_GET_PROP_ADDRESS_" << property.Identifier << L"() { return (void* ObjectBase::*)&" << $class.Name << L"::" << property.Identifier << L"; }";
 			}
 		}
 #endif

@@ -10,7 +10,7 @@ project "stb"
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS",
-        "STB_IMAGE_STATIC"
+		"STBIW_WINDOWS_UTF8"
 	}
 
 	files

@@ -4,8 +4,8 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #pragma warning(pop)
 
-Ref<spdlog::logger> Log::s_coreLogger;
-Ref<spdlog::logger> Log::s_clientLogger;
+GARBAGE_API Ref<spdlog::logger> Log::s_coreLogger;
+GARBAGE_API Ref<spdlog::logger> Log::s_clientLogger;
 
 template GARBAGE_API std::ostream& operator<< <std::ostream>(std::ostream& os, const Vector2& vec);
 template GARBAGE_API std::ostream& operator<< <std::ostream>(std::ostream& os, const Vector3& vec);
@@ -23,4 +23,9 @@ void Log::Init()
 	s_clientLogger = spdlog::stdout_color_mt("Application");
 	s_clientLogger->set_level(spdlog::level::trace);
 	s_clientLogger->set_pattern("%^[%T] %n: %v%$");
+}
+
+Ref<spdlog::logger> Log::GetClientLogger()
+{
+	return s_clientLogger;
 }

@@ -11,7 +11,7 @@ extern "C"
 }
 #endif
 
-namespace GarbageEngine
+namespace GarbageEngine2D
 {
 
 	void Init()

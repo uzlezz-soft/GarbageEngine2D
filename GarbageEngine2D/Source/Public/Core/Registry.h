@@ -18,6 +18,9 @@ public:
 	virtual const Meta::Type* GetType() const { return GetStaticType(); }
 	static const Meta::Type* GetStaticType() { return Z_m_type; }
 
+	template <typename T>
+	bool IsA() const;
+
 private:
 
 	friend Meta::Type;
@@ -218,6 +221,12 @@ namespace Meta
 
 	};
 
+}
+
+template <typename T>
+inline bool ObjectBase::IsA() const
+{
+	return GetType()->HasParent(T::GetStaticType()) || GetType()->HasChild(T::GetStaticType()) || T::GetStaticType() == GetType();
 }
 
 template<EngineObject T, EngineObject U>

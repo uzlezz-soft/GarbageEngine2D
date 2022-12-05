@@ -16,28 +16,6 @@ static Matrix4 s_projection{ 0.0f };
 static Matrix4 s_view{ 0.0f };
 static Matrix4 s_viewProjection{ 0.0f };
 
-#ifndef GARBAGE_SHIPPING
-namespace RendererLocal
-{
-	struct LineBatchData
-	{
-		Vector3 From{ 0.0f };
-		Color StartColor{ 1.0f, 0.0f, 0.0f, 1.0f };
-		Vector3 To{ 0.0f };
-		Color EndColor{ 1.0f, 0.0f, 0.0f, 1.0f };
-	};
-}
-
-static std::vector<RendererLocal::LineBatchData> s_lines;
-static Scope<VertexBuffer> s_linesBuffer{ nullptr };
-static Scope<VertexArray> s_linesVertexArray{ nullptr };
-
-static Scope<Shader> s_linesShader{ nullptr };
-static uint32 s_numberOfLines{ 0 };
-
-static std::mutex s_debugMutex;
-#endif
-
 static uint32 GarbageEngineRenderingFeatureToOpenGL(Renderer::Feature feature)
 {
 	switch (feature)
@@ -86,8 +64,7 @@ void Renderer::Init()
 	GARBAGE_CORE_INFO("GPU Vendor: {}", vendor);
 	GARBAGE_CORE_INFO("GPU: {}", renderer);
 
-	bool anisotropicFilteringSupported = glfwExtensionSupported("GL_EXT_texture_filter_anisotropic");
-	GARBAGE_CORE_ASSERT(anisotropicFilteringSupported == true);
+	glEnable(GL_TEXTURE_2D);
 
 	// Making OpenGL work with left-handed matrices
 	glFrontFace(GL_CW);
@@ -95,49 +72,6 @@ void Renderer::Init()
 	//s_shouldClearViewport = ConfigVariable::FindOrCreate("renderer.shouldClearColor", false);
 	//s_debugLinesWidth = ConfigVariable::FindOrCreate("renderer.debugLinesWidth", 1);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-#ifndef GARBAGE_SHIPPING
-	std::unordered_map<Shader::Type, std::string_view> shaderSources;
-	shaderSources[Shader::Type::Vertex] = R"(
-			layout (location = 0) in vec3 a_VertexPosition;
-			layout (location = 1) in vec4 a_Color;
-			
-			out vec4 LineColor;
-			
-			uniform mat4 u_viewProjection;
-			
-			void main()
-			{
-				gl_Position = u_viewProjection * vec4(a_VertexPosition, 1.0);
-				LineColor = a_Color;
-			}
-)";
-
-	shaderSources[Shader::Type::Fragment] = R"(
-			layout (location = 0) out vec4 Color;
-			
-			in vec4 LineColor;
-			
-			void main()
-			{
-				Color = LineColor;
-			}
-)";
-
-	s_linesShader.reset(new Shader(shaderSources));
-
-	s_linesVertexArray.reset(new VertexArray());
-
-	s_lines.reserve(50);
-	s_lines.push_back({ Vector3::Zero, Color::White, Vector3::One, Color::White });
-
-	s_linesBuffer.reset(new VertexBuffer(s_lines.data(), (uint32)(s_lines.size() * sizeof(RendererLocal::LineBatchData)), (uint32)s_lines.size() * 2, true));
-
-	VertexBufferLayout linesDataLayout;
-	linesDataLayout.Push<Vector3>(1);
-	linesDataLayout.Push<Color>(1);
-	s_linesVertexArray->AddBuffer(*s_linesBuffer, linesDataLayout);
-#endif
 }
 
 void Renderer::Clear()
@@ -165,41 +99,10 @@ void Renderer::BeginNewFrame(const Matrix4& projection, const Matrix4& view)
 	s_projection = projection;
 	s_view = view;
 	s_viewProjection = s_projection * s_view;
-
-#ifndef GARBAGE_SHIPPING
-	s_lines.clear();
-	s_numberOfLines = 0;
-#endif
 }
 
 void Renderer::EndFrame()
 {
-#ifndef GARBAGE_SHIPPING
-	std::scoped_lock<std::mutex> debugLock(s_debugMutex);
-
-	if (s_numberOfLines > 0)
-	{
-		s_linesBuffer->Bind();
-		s_linesBuffer->UpdateData(s_lines.data(), (uint32)(s_lines.size() * sizeof(RendererLocal::LineBatchData)));
-
-		EnableFeature(Renderer::Feature::AlphaBlending);
-		DisableFeature(Renderer::Feature::WriteToDepthBuffer);
-		DisableFeature(Renderer::Feature::CullFace);
-		SetBlendMode(Renderer::BlendMode::Additive);
-
-		s_linesShader->Bind();
-		s_linesShader->SetMatrix4(s_linesShader->GetUniformLocation(Shader::CachedUniform::ViewProjection), s_viewProjection);
-
-		s_linesVertexArray->Bind();
-		glLineWidth(/*(float)s_debugLinesWidth->Get<int32>()*/1.0f);
-		glDrawArrays(GL_LINES, 0, s_numberOfLines);
-
-		DisableFeature(Renderer::Feature::AlphaBlending);
-		DisableFeature(Renderer::Feature::CullFace);
-		EnableFeature(Renderer::Feature::WriteToDepthBuffer);
-	}
-#endif
-
 	s_statistics.FrameTime = s_rendererTimer.GetElapsedMilliseconds();
 }
 
@@ -254,23 +157,4 @@ void Renderer::SetFaceCullingMode(FaceCullingMode mode)
 const Renderer::Statistics& Renderer::GetStatistics() const
 {
 	return s_statistics;
-}
-
-void Renderer::DebugDrawLine(Vector3 from, Vector3 to, Color color)
-{
-#ifndef GARBAGE_SHIPPING
-	std::scoped_lock<std::mutex> debugLock(s_debugMutex);
-
-	s_lines.push_back({ from, color, to, color });
-	s_numberOfLines += 2;
-#endif
-}
-
-void Renderer::DebugDrawCoordinateSystem(Vector3 location)
-{
-#ifndef GARBAGE_SHIPPING
-	DebugDrawLine(location, location + Vector3(1.0f, 0.0f, 0.0f), Color(1.0, 0.0, 0.0, 1.0));
-	DebugDrawLine(location, location + Vector3(0.0f, 1.0f, 0.0f), Color(0.0, 1.0, 0.0, 1.0));
-	DebugDrawLine(location, location + Vector3(0.0f, 0.0f, 1.0f), Color(0.0, 0.0, 1.0, 1.0));
-#endif
 }

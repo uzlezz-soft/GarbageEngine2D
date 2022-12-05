@@ -71,9 +71,6 @@ public:
 
 	const Statistics& GetStatistics() const;
 
-	static void DebugDrawLine(Vector3 from, Vector3 to, Color color = Color(1.0f, 0.0f, 0.0f, 1.0f));
-	static void DebugDrawCoordinateSystem(Vector3 location);
-
 	NON_COPYABLE(Renderer)
 
 };

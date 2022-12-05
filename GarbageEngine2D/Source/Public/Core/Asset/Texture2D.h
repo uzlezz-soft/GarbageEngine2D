@@ -13,7 +13,7 @@ public:
 
 	Vector2 GetSize() const { return m_size; }
 	uint8 GetNumberOfColorChannels() const { return m_numberOfColorChannels; }
-	std::string_view GetData() const { return m_data; }
+	uint8* GetData() const { return m_data.get(); }
 
 private:
 
@@ -21,7 +21,7 @@ private:
 
 	Vector2 m_size;
 	uint8 m_numberOfColorChannels;
-	std::string m_data;
+	Ref<uint8[]> m_data;
 
 };
 

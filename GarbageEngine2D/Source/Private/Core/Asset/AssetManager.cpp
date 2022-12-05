@@ -60,3 +60,5 @@ Ref<Asset> AssetManager::LoadAsset(const std::filesystem::path& name)
 
 	return nullptr;
 }
+
+FileSystem* AssetManager::GetFileSystem() { return Get().m_fileSystem.get(); }

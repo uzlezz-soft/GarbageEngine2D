@@ -11,6 +11,8 @@ public:
 		None = 0, Red = 1, RedInteger = 2, RGB8 = 3, RGBA8 = 4, Depth16, Depth24Stencil8, Depth32
 	};
 
+	static Format FormatFromNumberOfColorChannels(uint8 numberOfColorChannels);
+
 	enum class WrapMode
 	{
 		Repeat, MirroredRepeat, ClampToEdge, ClampToBorder
@@ -69,6 +71,8 @@ protected:
 
 	uint32 GetConvertedFormat() const { return m_convertedFormat; }
 	uint32 GetInternalFormat() const { return m_internalFormat; }
+	
+	void UpdateMemoryInfo(uint64 size);
 
 private:
 
@@ -79,6 +83,8 @@ private:
 	uint32 m_width{ 0 };
 	uint32 m_height{ 0 };
 	Format m_format{ Format::RGB8 };
+
+	uint64 m_sizeInVRam{ 0 };
 
 };
 

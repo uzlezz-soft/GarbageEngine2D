@@ -64,8 +64,6 @@ void Renderer::Init()
 	GARBAGE_CORE_INFO("GPU Vendor: {}", vendor);
 	GARBAGE_CORE_INFO("GPU: {}", renderer);
 
-	glEnable(GL_TEXTURE_2D);
-
 	// Making OpenGL work with left-handed matrices
 	glFrontFace(GL_CW);
 

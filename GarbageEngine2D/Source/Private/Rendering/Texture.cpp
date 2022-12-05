@@ -1,8 +1,8 @@
 #include "Rendering/Texture.h"
 #include "Math/Math.h"
+#include "Memory/Statistics.h"
 #include "OpenGL.h"
 #include "Core/Assert.h"
-#include <cmath>
 #include <type_traits>
 
 static uint8 GetTextureFormatSize(Texture::Format format)
@@ -53,8 +53,7 @@ static uint32 GarbageEngineFormatToOpenGLInternalFormat(Texture::Format format)
 		case Texture::Format::Depth32: return GL_R32F;
 	}
 
-	const uint32 format_ = (uint32)format;
-	GARBAGE_CORE_ASSERT(false, "Unknown texture format: {}", format_);
+	GARBAGE_CORE_ASSERT(false, "Unknown texture format: {}", (uint32)format);
 
 	return 0;
 }
@@ -95,7 +94,7 @@ concept Number = std::is_arithmetic_v<T>;
 template <Number T>
 FORCEINLINE static bool IsPowerOfTwo(T n)
 {
-	return n >= 2 && (ceil(log2(n)) == floor(log2(n)));
+	return n >= 2 && (Math::Ceil(Math::Log(n)) == Math::Floor(Math::Log(n)));
 }
 
 static uint32 GetNumberOfMipLevels(uint16 resolutionX, uint16 resolutionY)
@@ -112,6 +111,22 @@ static uint32 GetNumberOfMipLevels(uint16 resolutionX, uint16 resolutionY)
 	} while (IsPowerOfTwo(resX) && IsPowerOfTwo(resY));
 
 	return mipLevels;
+}
+
+Texture::Format Texture::FormatFromNumberOfColorChannels(uint8 numberOfColorChannels)
+{
+	GARBAGE_CORE_ASSERT(numberOfColorChannels > 0 && numberOfColorChannels <= 4);
+
+	switch (numberOfColorChannels)
+	{
+		case 1: return Texture::Format::Red;
+		case 3: return Texture::Format::RGB8;
+		case 4: return Texture::Format::RGBA8;
+	}
+
+	GARBAGE_CORE_ASSERT(false, "Unknown format for this number of color channels: {}", numberOfColorChannels);
+
+	return Texture::Format::Red;
 }
 
 Texture::~Texture()
@@ -160,19 +175,30 @@ bool Texture::Setup(const Specification& specification)
 	return generateMipmaps;
 }
 
+void Texture::UpdateMemoryInfo(uint64 size)
+{
+	MemoryStatistics::Get().m_vramUsedForTextures -= m_sizeInVRam;
+	m_sizeInVRam = size;
+	MemoryStatistics::Get().m_vramUsedForTextures += size;
+}
+
 
 
 Texture2D::Texture2D(const Specification& specification) : Texture(GL_TEXTURE_2D)
 {
 	bool canGenerateMipmaps = Setup(specification);
 
-	//GLCall(glTexStorage2D(GL_TEXTURE_2D, canGenerateMipmaps ? GetNumberOfMipLevels(specification.Width, specification.Height) : 1, GetInternalFormat(), GetWidth(), GetHeight()));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, canGenerateMipmaps ? GetNumberOfMipLevels(specification.Width, specification.Height) : 1,
-		GetInternalFormat(), GetWidth(), GetHeight(), 0, GetConvertedFormat(), GL_UNSIGNED_BYTE, nullptr));
-	if (specification.Data) SetData(specification.Data, GetWidth() * GetHeight() * GetTextureFormatSize(specification.Format));
-	if (canGenerateMipmaps)
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), GetWidth(), GetHeight(), 0, GetConvertedFormat(), GL_UNSIGNED_BYTE, nullptr));
+	UpdateMemoryInfo((uint64)GetWidth() * (uint64)GetHeight() * (uint64)GetTextureFormatSize(specification.Format));
+
+	if (specification.Data)
 	{
-		GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+		SetData(specification.Data, GetWidth() * GetHeight() * GetTextureFormatSize(GetFormat()));
+
+		if (canGenerateMipmaps)
+		{
+			GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+		}
 	}
 }
 

@@ -12,6 +12,8 @@ public:
 
 	static Ref<Asset> LoadAsset(const std::filesystem::path& name);
 
+	static FileSystem* GetFileSystem();
+
 private:
 
 	Ref<FileSystem> m_fileSystem{ nullptr };

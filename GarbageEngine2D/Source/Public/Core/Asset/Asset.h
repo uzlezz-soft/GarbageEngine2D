@@ -46,7 +46,7 @@ class GARBAGE_API AssetFactory : public ObjectBase
 public:
 
 	virtual bool CreateFromSourceAsset(Asset* output, File* stream, std::string_view sourceFileExtension) CORE_PURE_VIRTUAL(return false);
-	virtual void Serialize(Asset* asset, std::ostream& stream) CORE_PURE_VIRTUAL();
-	virtual void Deserialize(Asset* asset, std::istream& stream) CORE_PURE_VIRTUAL();
+	virtual bool Serialize(Asset* asset, File* stream) CORE_PURE_VIRTUAL(return false);
+	virtual bool Deserialize(Asset* asset, File* stream) CORE_PURE_VIRTUAL(return false);
 
 };

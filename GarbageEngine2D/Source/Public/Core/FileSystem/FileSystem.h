@@ -33,6 +33,9 @@ public:
 
 	virtual bool EndOfStream() const = 0;
 
+	virtual void WriteRawString(uint8* data, uint64 size) = 0;
+	virtual void ReadRawString(uint8* data, uint64 size) = 0;
+
 	virtual File& operator>>(int8& out) = 0;
 	virtual File& operator>>(uint8& out) = 0;
 	virtual File& operator>>(int16& out) = 0;

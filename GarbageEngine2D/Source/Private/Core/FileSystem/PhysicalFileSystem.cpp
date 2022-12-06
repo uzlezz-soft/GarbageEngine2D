@@ -36,6 +36,16 @@ bool PhysicalFile::EndOfStream() const
 	return m_stream.eof();
 }
 
+void PhysicalFile::ReadRawString(uint8* data, uint64 size)
+{
+	m_stream.read((char*)data, size);
+}
+
+void PhysicalFile::WriteRawString(uint8* data, uint64 size)
+{
+	m_stream.write((const char*)data, size);
+}
+
 File& PhysicalFile::operator>>(int8& out) { return Read(out); }
 
 File& PhysicalFile::operator>>(uint8& out) { return Read(out); }

@@ -18,6 +18,9 @@ public:
 
 	bool EndOfStream() const override;
 
+	void ReadRawString(uint8* data, uint64 size) override;
+	void WriteRawString(uint8* data, uint64 size) override;
+
 	File& operator>>(int8& out) override;
 	File& operator>>(uint8& out) override;
 	File& operator>>(int16& out) override;

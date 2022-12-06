@@ -2,9 +2,33 @@
 #include "Core/Asset/Asset.h"
 #include "Core/Registry.h"
 
-AssetManager::AssetManager()
+AssetManager::AssetManager() : m_allocator(1024)
 {
 	GARBAGE_CORE_INFO("Asset manager initialized");
+
+	GatherAssetFactories();
+}
+
+void AssetManager::GatherAssetFactories()
+{
+	static auto parentType = Meta::Registry::Get().FindType("AssetFactory");
+
+	m_factories.clear();
+	m_allocator.Reset();
+	GARBAGE_CORE_INFO("Registering asset factories...");
+
+	for (auto& type : Meta::Registry::Get().GetAllTypes())
+	{
+		if (type->HasParent(parentType))
+		{
+			GARBAGE_CORE_ASSERT(type->HasDecorator("AssetType"));
+
+			m_factories.emplace_back((AssetFactory*)type->Construct(&m_allocator));
+			GARBAGE_CORE_TRACE("Found asset factory: {}", type->GetName());
+		}
+	}
+
+	GARBAGE_CORE_INFO("Registered {} asset factories.", m_factories.size());
 }
 
 void AssetManager::Init(Ref<FileSystem> fileSystem)
@@ -27,31 +51,71 @@ Ref<Asset> AssetManager::LoadAsset(const std::filesystem::path& name)
 
 	auto file = Get().m_fileSystem->OpenFile(Get().m_fileSystem->FindFile(name).value());
 
-	static auto parentType = Meta::Registry::Get().FindType("AssetFactory");
-
-	for (auto& type : Meta::Registry::Get().GetAllTypes())
+	std::string sourcePath;
 	{
-		if (type->HasParent(parentType))
+		const std::string_view assetTestString = "GARBAGE_ASSET_";
+
+		std::string str;
+		str.resize(assetTestString.size());
+
+		file->ReadRawString((uint8*)&str[0], assetTestString.size());
+		if (str == assetTestString)
 		{
-			if (type->HasDecorator("SourceFileFormats"))
+			*file >> sourcePath;
+		}
+		else
+		{
+			file->SetStreamPosition(0);
+		}
+	}
+
+	for (auto& factory : Get().m_factories)
+	{
+		auto type = factory->GetType();
+
+		if (type->HasDecorator("ConvertedFormat"))
+		{
+			auto convertedFileExtensions = type->GetDecoratorValues("ConvertedFormat");
+
+			for (auto& format : *convertedFileExtensions)
 			{
-				auto sourceFileExtensions = type->GetDecoratorValues("SourceFileFormats");
-
-				for (auto& format : *sourceFileExtensions)
+				if (format == extension)
 				{
-					if (format == extension)
+					auto instance = (AssetFactory*)type->Construct(nullptr);
+
+					Ref<Asset> asset = Ref<Asset>((Asset*)Meta::Registry::Get().FindType((*type->GetDecoratorValues("AssetType"))[0])->Construct(nullptr));
+
+					if (instance->Deserialize(asset.get(), file.get()))
 					{
-						auto instance = (AssetFactory*)type->Construct(nullptr);
-						
-						Ref<Asset> asset = Ref<Asset>((Asset*)Meta::Registry::Get().FindType((*type->GetDecoratorValues("AssetType"))[0])->Construct(nullptr));
+						asset->m_name = name.filename();
+						asset->m_sourcePath = sourcePath;
+						asset->m_path = name;
 
-						if (instance->CreateFromSourceAsset(asset.get(), file.get(), extension))
-						{
-							asset->m_name = name.filename();
-							asset->m_sourcePath = std::filesystem::absolute(name);
+						return asset;
+					}
+				}
+			}
+		}
 
-							return asset;
-						}
+		if (type->HasDecorator("SourceFileFormats"))
+		{
+			auto sourceFileExtensions = type->GetDecoratorValues("SourceFileFormats");
+
+			for (auto& format : *sourceFileExtensions)
+			{
+				if (format == extension)
+				{
+					auto instance = (AssetFactory*)type->Construct(nullptr);
+
+					Ref<Asset> asset = Ref<Asset>((Asset*)Meta::Registry::Get().FindType((*type->GetDecoratorValues("AssetType"))[0])->Construct(nullptr));
+
+					if (instance->CreateFromSourceAsset(asset.get(), file.get(), extension))
+					{
+						asset->m_name = name.filename();
+						asset->m_sourcePath = std::filesystem::absolute(name);
+						asset->m_path = std::filesystem::path("Source") / asset->m_name;
+
+						return asset;
 					}
 				}
 			}
@@ -61,4 +125,39 @@ Ref<Asset> AssetManager::LoadAsset(const std::filesystem::path& name)
 	return nullptr;
 }
 
+void AssetManager::SaveAsset(Asset* asset, const std::filesystem::path& path)
+{
+	FileEntry fileEntry;
+
+	if (!Get().m_fileSystem->IsFileExists(path)) fileEntry = Get().m_fileSystem->CreateFile(path);
+	else fileEntry = Get().m_fileSystem->FindFile(path).value();
+
+	auto file = Get().m_fileSystem->OpenFile(fileEntry);
+
+	const std::string_view assetTestString = "GARBAGE_ASSET_";
+	file->WriteRawString((uint8*)assetTestString.data(), assetTestString.size());
+
+	*file << asset->GetSourcePath().generic_string();
+
+	auto assetType = asset->GetType();
+	
+	for (auto& factory : Get().m_factories)
+	{
+		auto type = factory->GetType();
+
+		if ((*type->GetDecoratorValues("AssetType"))[0] == assetType->GetName())
+		{
+			if (factory->Serialize(asset, file.get()))
+			{
+				return;
+			}
+		}
+	}
+}
+
 FileSystem* AssetManager::GetFileSystem() { return Get().m_fileSystem.get(); }
+
+void AssetManager::ReloadAssetFactories()
+{
+	Get().GatherAssetFactories();
+}

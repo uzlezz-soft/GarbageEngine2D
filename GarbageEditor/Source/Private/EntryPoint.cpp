@@ -9,6 +9,7 @@
 #include <Core/Asset/Texture2D.h>
 #include <Rendering/Texture.h>
 #include <Rendering/Shader.h>
+#include <unordered_set>
 
 int main()
 {
@@ -28,16 +29,24 @@ int main()
 	Renderer renderer;
 	renderer.Init();
 
+	std::unordered_set<std::filesystem::path> loadedTextures;
 	std::vector<Ref<Texture2D>> textures;
+
+	Timer texturesTimer;
 
 	for (auto& entry : *fileSystem)
 	{
 		auto asset = AssetManager::LoadAsset(entry.Path);
 		if (asset && asset->IsA<Texture2DAsset>())
 		{
+			auto name = asset->GetName().stem();
+			if (loadedTextures.find(name) != loadedTextures.end()) continue;
+
+			loadedTextures.insert(name);
+
 			Texture2DAsset* textureAsset = (Texture2DAsset*)asset.get();
 
-			GARBAGE_INFO("Texture: {} ({}x{}x{}, {})", asset->GetName(), textureAsset->GetSize().X, textureAsset->GetSize().Y, textureAsset->GetNumberOfColorChannels(),
+			GARBAGE_INFO("Texture: \"{}\" ({}x{}x{}, {})", asset->GetPath().generic_string(), textureAsset->GetSize().X, textureAsset->GetSize().Y, textureAsset->GetNumberOfColorChannels(),
 				Utils::ConvertBytesQuantityToHumanReadableFormat(textureAsset->GetSize().X * textureAsset->GetSize().Y * textureAsset->GetNumberOfColorChannels()));
 
 			Texture::Specification specification;
@@ -49,9 +58,13 @@ int main()
 			
 			Ref<Texture2D> texture = MakeRef<Texture2D>(specification);
 
+			AssetManager::SaveAsset(asset.get(), entry.Path.root_directory() / (entry.Name.stem().generic_string() + ".gbtex2d"));
+
 			textures.push_back(texture);
 		}
 	}
+
+	GARBAGE_INFO("Textures loaded in {}ms", texturesTimer.GetElapsedMilliseconds());
 
 	float quadQuadData[] =
 	{

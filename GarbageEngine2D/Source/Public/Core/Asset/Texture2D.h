@@ -33,7 +33,7 @@ class GARBAGE_API Texture2DAssetFactory final : public AssetFactory
 public:
 
 	bool CreateFromSourceAsset(Asset* output, File* stream, std::string_view sourceFileExtension) override;
-	void Serialize(Asset* asset, std::ostream& stream) override {}
-	void Deserialize(Asset* asset, std::istream& stream) override {}
+	bool Serialize(Asset* asset, File* stream) override;
+	bool Deserialize(Asset* asset, File* stream) override;
 
 };

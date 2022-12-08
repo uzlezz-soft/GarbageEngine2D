@@ -36,6 +36,23 @@ int main()
 
 	for (const auto& entry : *fileSystem)
 	{
+		auto assetType = AssetManager::GetAssetType(entry.Name);
+
+		switch (assetType)
+		{
+			case AssetManager::AssetType::Source:
+			{
+				GARBAGE_INFO("Is there cooked asset for {}: {}", entry.Path, AssetManager::SourceAssetHasCookedAsset(entry.Path));
+			}
+
+		case AssetManager::AssetType::Cooked:
+
+			break;
+		}
+	}
+
+	for (const auto& entry : *fileSystem)
+	{
 		auto name = entry.Name.stem();
 		if (loadedTextures.find(name) != loadedTextures.end()) continue;
 

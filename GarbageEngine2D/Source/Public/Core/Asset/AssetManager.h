@@ -9,10 +9,18 @@ class GARBAGE_API AssetManager final : public ObjectBase
 {
 public:
 
+	enum class AssetType
+	{
+		Source, Cooked, Unknown
+	};
+
 	static void Init(Ref<FileSystem> fileSystem);
 
 	static Ref<Asset> LoadAsset(const std::filesystem::path& name);
 	static void SaveAsset(Asset* asset, const std::filesystem::path& path);
+
+	static AssetType GetAssetType(const std::filesystem::path& name);
+	static bool SourceAssetHasCookedAsset(const std::filesystem::path& name);
 
 	static FileSystem* GetFileSystem();
 

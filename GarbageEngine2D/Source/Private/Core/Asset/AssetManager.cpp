@@ -155,6 +155,89 @@ void AssetManager::SaveAsset(Asset* asset, const std::filesystem::path& path)
 	}
 }
 
+AssetManager::AssetType AssetManager::GetAssetType(const std::filesystem::path& name)
+{
+	std::string extension;
+
+	{
+		auto extension_ = name.extension();
+
+		auto extensionString = extension_.string();
+		if (extensionString.size() <= 1) return AssetType::Unknown;
+
+		extension = extensionString.substr(1);
+	}
+
+	for (auto& factory : Get().m_factories)
+	{
+		auto type = factory->GetType();
+
+		if (type->HasDecorator("ConvertedFormat"))
+		{
+			auto convertedFileExtensions = type->GetDecoratorValues("ConvertedFormat");
+
+			for (auto& format : *convertedFileExtensions)
+			{
+				if (format == extension) return AssetType::Cooked;
+			}
+		}
+
+		if (type->HasDecorator("SourceFileFormats"))
+		{
+			auto sourceFileExtensions = type->GetDecoratorValues("SourceFileFormats");
+
+			for (auto& format : *sourceFileExtensions)
+			{
+				if (format == extension) return AssetType::Source;
+			}
+		}
+	}
+	
+	return AssetType::Unknown;
+}
+
+bool AssetManager::SourceAssetHasCookedAsset(const std::filesystem::path& name)
+{
+	std::string extension;
+
+	{
+		auto extension_ = name.extension();
+
+		auto extensionString = extension_.string();
+		if (extensionString.size() <= 1) return false;
+
+		extension = extensionString.substr(1);
+	}
+
+	auto path = name.parent_path();
+	auto stem = name.stem().generic_string() + ".";
+
+	for (auto& factory : Get().m_factories)
+	{
+		auto type = factory->GetType();
+
+		if (type->HasDecorator("ConvertedFormat") && type->HasDecorator("SourceFileFormats"))
+		{
+			auto sourceFileExtensions = type->GetDecoratorValues("SourceFileFormats");
+
+			for (auto& sourceFormat : *sourceFileExtensions)
+			{
+				if (sourceFormat == extension)
+				{
+					for (auto& convertedFormat : *type->GetDecoratorValues("ConvertedFormat"))
+					{
+						auto filename = stem + convertedFormat;
+
+						if (Get().m_fileSystem->IsFileExists(path / filename)) return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 FileSystem* AssetManager::GetFileSystem() { return Get().m_fileSystem.get(); }
 
 void AssetManager::ReloadAssetFactories()

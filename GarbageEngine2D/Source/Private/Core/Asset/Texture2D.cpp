@@ -9,7 +9,7 @@ bool Texture2DAssetFactory::CreateFromSourceAsset(Asset* output, File* file, std
 	int x = 0, y = 0, numColorChannels = 0;
 
 	stbi_set_flip_vertically_on_load(true);
-	uint8* data = (uint8*)stbi_load_from_memory((const stbi_uc*)rawData, file->GetEntry().Size, &x, &y, &numColorChannels, 0);
+	uint8* data = (uint8*)stbi_load_from_memory((const stbi_uc*)rawData, (int)file->GetEntry().Size, &x, &y, &numColorChannels, 0);
 
 	delete[] rawData;
 
@@ -21,6 +21,11 @@ bool Texture2DAssetFactory::CreateFromSourceAsset(Asset* output, File* file, std
 
 	textureAsset->m_size = Vector2((float)x, (float)y);
 	textureAsset->m_numberOfColorChannels = numColorChannels;
+
+	textureAsset->m_format = Texture::FormatFromNumberOfColorChannels(numColorChannels);
+	textureAsset->MinFiltering = textureAsset->MagFiltering = x <= 64 && y <= 64 ? Texture::Filtering::Nearest : Texture::Filtering::Linear;
+	textureAsset->WrapMode = Texture::WrapMode::Repeat;
+	textureAsset->GenerateMipmaps = true;
 
 	return true;
 }
@@ -35,6 +40,8 @@ bool Texture2DAssetFactory::Serialize(Asset* asset, File* stream)
 
 	*stream << width << height << textureAsset->GetNumberOfColorChannels() << size;
 
+	*stream << (uint8)textureAsset->GetFormat() << (uint8)textureAsset->MinFiltering << (uint8)textureAsset->MagFiltering << (uint8)textureAsset->WrapMode << textureAsset->GenerateMipmaps;
+
 	stream->WriteRawString(textureAsset->m_data.get(), size);
 
 	return true;
@@ -46,8 +53,13 @@ bool Texture2DAssetFactory::Deserialize(Asset* asset, File* stream)
 	uint16 height = 0;
 	uint8 numberOfColorChannels = 0;
 	uint64 size = 0;
+	uint8 format = 0;
+	uint8 minFiltering = 0;
+	uint8 magFiltering = 0;
+	uint8 wrapMode = 0;
+	bool generateMipmaps = true;
 
-	*stream >> width >> height >> numberOfColorChannels >> size;
+	*stream >> width >> height >> numberOfColorChannels >> size >> format >> minFiltering >> magFiltering >> wrapMode >> generateMipmaps;
 
 	Texture2DAsset* textureAsset = (Texture2DAsset*)asset;
 
@@ -57,6 +69,14 @@ bool Texture2DAssetFactory::Deserialize(Asset* asset, File* stream)
 
 	textureAsset->m_size = Vector2((float)width, (float)height);
 	textureAsset->m_numberOfColorChannels = numberOfColorChannels;
+
+	textureAsset->m_format = (Texture::Format)format;
+
+	textureAsset->MinFiltering = (Texture::Filtering)minFiltering;
+	textureAsset->MagFiltering = (Texture::Filtering)magFiltering;
+
+	textureAsset->WrapMode = (Texture::WrapMode)wrapMode;
+	textureAsset->GenerateMipmaps = generateMipmaps;
 
 	return true;
 }

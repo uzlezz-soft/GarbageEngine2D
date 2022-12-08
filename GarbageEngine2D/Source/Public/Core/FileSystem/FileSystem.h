@@ -45,6 +45,7 @@ public:
 	virtual File& operator>>(int64& out) = 0;
 	virtual File& operator>>(uint64& out) = 0;
 	virtual File& operator>>(std::string& out) = 0;
+	virtual File& operator>>(bool& out) = 0;
 
 	virtual File& operator<<(int8 in) = 0;
 	virtual File& operator<<(uint8 in) = 0;
@@ -55,6 +56,7 @@ public:
 	virtual File& operator<<(int64 in) = 0;
 	virtual File& operator<<(uint64 in) = 0;
 	virtual File& operator<<(std::string_view in) = 0;
+	virtual File& operator<<(bool in) = 0;
 
 private:
 
@@ -84,8 +86,8 @@ public:
 
 	virtual std::optional<FileEntry> FindFile(const std::filesystem::path& name) = 0;
 
-	std::list<FileEntry>::iterator begin() { return m_fileEntries.begin(); }
-	std::list<FileEntry>::iterator end() { return m_fileEntries.end(); }
+	std::list<FileEntry>::const_iterator begin() const { return m_fileEntries.cbegin(); }
+	std::list<FileEntry>::const_iterator end() const { return m_fileEntries.cend(); }
 
 protected:
 

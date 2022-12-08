@@ -34,14 +34,14 @@ int main()
 
 	Timer texturesTimer;
 
-	for (auto& entry : *fileSystem)
+	for (const auto& entry : *fileSystem)
 	{
+		auto name = entry.Name.stem();
+		if (loadedTextures.find(name) != loadedTextures.end()) continue;
+
 		auto asset = AssetManager::LoadAsset(entry.Path);
 		if (asset && asset->IsA<Texture2DAsset>())
 		{
-			auto name = asset->GetName().stem();
-			if (loadedTextures.find(name) != loadedTextures.end()) continue;
-
 			loadedTextures.insert(name);
 
 			Texture2DAsset* textureAsset = (Texture2DAsset*)asset.get();
@@ -49,16 +49,21 @@ int main()
 			GARBAGE_INFO("Texture: \"{}\" ({}x{}x{}, {})", asset->GetPath().generic_string(), textureAsset->GetSize().X, textureAsset->GetSize().Y, textureAsset->GetNumberOfColorChannels(),
 				Utils::ConvertBytesQuantityToHumanReadableFormat(textureAsset->GetSize().X * textureAsset->GetSize().Y * textureAsset->GetNumberOfColorChannels()));
 
+			GARBAGE_INFO("Source file: \"{}\"", asset->GetSourcePath().generic_string());
+
 			Texture::Specification specification;
 			specification.Format = Texture::FormatFromNumberOfColorChannels(textureAsset->GetNumberOfColorChannels());
 			specification.Width = textureAsset->GetSize().X;
 			specification.Height = textureAsset->GetSize().Y;
-			specification.GenerateMipmaps = true;
+			specification.GenerateMipmaps = textureAsset->GenerateMipmaps;
 			specification.Data = (void*)textureAsset->GetData();
+			specification.MinFiltering = textureAsset->MinFiltering;
+			specification.MagFiltering = textureAsset->MagFiltering;
+			specification.WrapMode = textureAsset->WrapMode;
 			
 			Ref<Texture2D> texture = MakeRef<Texture2D>(specification);
 
-			AssetManager::SaveAsset(asset.get(), entry.Path.root_directory() / (entry.Name.stem().generic_string() + ".gbtex2d"));
+			if (asset->JustLoadedFromSourceFile()) AssetManager::SaveAsset(asset.get(), entry.Path.parent_path() / (entry.Name.stem().generic_string() + ".gbtex2d"));
 
 			textures.push_back(texture);
 		}

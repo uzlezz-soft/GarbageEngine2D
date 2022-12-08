@@ -86,6 +86,8 @@ File& PhysicalFile::operator>>(uint64& out)
 
 File& PhysicalFile::operator>>(std::string& out) { return ReadString(out); }
 
+File& PhysicalFile::operator>>(bool& out) { uint8 data = 0; Read(data); out = data; return *this; }
+
 File& PhysicalFile::operator<<(int8 in) { return Write(in); }
 
 File& PhysicalFile::operator<<(uint8 in) { return Write(in); }
@@ -112,6 +114,8 @@ File& PhysicalFile::operator<<(int64 in)
 
 	return *this;
 }
+
+File& PhysicalFile::operator<<(bool in) { return Write((uint8)in); }
 
 File& PhysicalFile::operator<<(uint64 in)
 {

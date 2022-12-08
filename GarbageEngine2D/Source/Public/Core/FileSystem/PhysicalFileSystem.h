@@ -30,6 +30,7 @@ public:
 	File& operator>>(int64& out) override;
 	File& operator>>(uint64& out) override;
 	File& operator>>(std::string& out) override;
+	File& operator>>(bool& out) override;
 
 	File& operator<<(int8 in) override;
 	File& operator<<(uint8 in) override;
@@ -40,6 +41,7 @@ public:
 	File& operator<<(int64 in) override;
 	File& operator<<(uint64 in) override;
 	File& operator<<(std::string_view in) override;
+	File& operator<<(bool in) override;
 
 private:
 
@@ -59,8 +61,10 @@ private:
 		uint64 size = 0;
 		Read(size);
 
-		data.reserve(size);
-		m_stream.read(&data[0], size);
+		std::string buffer(size, ' ');
+
+		m_stream.read(&buffer[0], size);
+		data = buffer;
 
 		return *this;
 	}

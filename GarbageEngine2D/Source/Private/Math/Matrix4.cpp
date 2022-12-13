@@ -320,14 +320,14 @@ Matrix4& Matrix4::SetToIdentity()
     return *this;
 }
 
-Matrix4 Matrix4::Translate(const Vector3& v)
+Matrix4 Matrix4::Translate(const Vector3& v) const
 {
     Matrix4 result(*this);
     result.M[3] = M[0] * v.Data[0] + M[1] * v.Data[1] + M[2] * v.Data[2] + M[3];
     return result;
 }
 
-Matrix4 Matrix4::Scale(const Vector3& v)
+Matrix4 Matrix4::Scale(const Vector3& v) const
 {
     Matrix4 result;
     result.M[0] = M[0] * v.Data[0];
@@ -337,7 +337,7 @@ Matrix4 Matrix4::Scale(const Vector3& v)
     return result;
 }
 
-Matrix4 Matrix4::RotateX(float angle)
+Matrix4 Matrix4::RotateX(float angle) const
 {
     return *this * Matrix4(
         1, 0, 0, 0,
@@ -347,7 +347,7 @@ Matrix4 Matrix4::RotateX(float angle)
     );
 }
 
-Matrix4 Matrix4::RotateY(float angle)
+Matrix4 Matrix4::RotateY(float angle) const
 {
     return *this * Matrix4(
         Math::Cos(angle), 0, Math::Sin(angle), 0,
@@ -357,7 +357,7 @@ Matrix4 Matrix4::RotateY(float angle)
     );
 }
 
-Matrix4 Matrix4::RotateZ(float angle)
+Matrix4 Matrix4::RotateZ(float angle) const
 {
     return *this * Matrix4(
         Math::Cos(angle), -Math::Sin(angle), 0, 0,
@@ -367,20 +367,8 @@ Matrix4 Matrix4::RotateZ(float angle)
     );
 }
 
-Matrix4 Matrix4::Rotate(const Vector3& axis, float angle)
+Matrix4 Matrix4::Rotate(const Vector3& axis, float angle) const
 {
-    /*float s = Math::Sin(angle);
-    float c = Math::Cos(angle);
-    float t = 1 - c;
-    Vector3 a = axis.Normalized();
-
-    return *this * Matrix4(
-        a.X * a.X * t + c, a.X * a.Y * t - a.Z * s, a.X * a.Z * t + a.Y * s, 0,
-        a.Y * a.X * t + a.Z * s, a.Y * a.Y * t + c, a.Y * a.Z * t - a.X * s, 0,
-        a.Z * a.X * t - a.Y * s, a.Z * a.Y * t + a.X * s, a.Z * a.Z * t + c, 0,
-        0, 0, 0, 1
-    );*/
-
     const float a = angle;
     const float c = cos(a);
     const float s = sin(a);

@@ -15,6 +15,8 @@ static bool StripFileExtension(const std::filesystem::path& name, std::string& o
 
 	std::transform(out.begin(), out.end(), out.begin(),
 		[](unsigned char c) { return std::tolower(c); });
+
+	return true;
 }
 
 AssetManager::AssetManager() : m_allocator(1024)

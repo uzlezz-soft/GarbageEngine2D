@@ -72,7 +72,7 @@ project "GarbageEngine2D"
         {
             "GARBAGE_DEBUG",
             "_DEBUG",
-            "GARBAGE_BUILD_DLL",
+            "GARBAGE_ENGINE_DLL",
             "GARBAGEENGINE_EXPORTS"
         }
 
@@ -87,7 +87,7 @@ project "GarbageEngine2D"
         {
             "GARBAGE_RELEASE",
             "NDEBUG",
-            "GARBAGE_BUILD_DLL",
+            "GARBAGE_ENGINE_DLL",
             "GARBAGEENGINE_EXPORTS"
         }
 

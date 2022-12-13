@@ -43,7 +43,7 @@ int main()
 
 	Matrix4 view = Matrix4::LookAt(Vector3(0, 0, -1), Vector3(0, 0, 0), Vector2(0, 1));
 
-	Matrix4 model(1.0f);
+	Matrix4 model = Matrix4::Identity;
 
 	renderer.DisableFeature(Renderer::Feature::CullFace);
 
@@ -53,7 +53,7 @@ int main()
 
 	renderer.EnableFeature(Renderer::Feature::AlphaBlending);
 	renderer.SetBlendMode(Renderer::BlendMode::Default);
-
+	
 	Random random;
 
 	while (window.IsOpened())
@@ -67,19 +67,19 @@ int main()
 		renderer.BeginNewFrame(projection, Matrix4(1.0f));
 		renderer.Clear();
 
-		model = Matrix4(1.0f).Translate(Vector3(Math::Sin(timer.GetElapsedSeconds()) * 2.0f, 0.0f, 0.0f));
+		model = Matrix4::Identity.Translate(Vector3(Math::Sin(timer.GetElapsedSeconds()) * 2.0f, 0.0f, 0.0f));
 
-		renderer.DrawQuad(model, Color(1.0f, 1.0f, 1.0f, 1.0f));
+		renderer.DrawQuad(model, Color::White);
 
-		model = Matrix4(1.0f).Translate(Vector3(-Math::Sin(timer.GetElapsedSeconds() * 2.5f) * 2.0f, 0.0f, 0.0f));
+		model = Matrix4::Identity.Translate(Vector3(-Math::Sin(timer.GetElapsedSeconds() * 2.5f) * 2.0f, 0.0f, 0.0f));
 
-		renderer.DrawQuad(model, Color(1.0f, 0.0f, 0.0f, 1.0f));
+		renderer.DrawQuad(model, Color::Red);
 
 		for (uint32 i = 0; i < 20000; i++)
 		{
-			model = Matrix4(1.0f).Translate(random.UnitVector3() * 4.0f).Scale(Vector3(0.1f));
+			model = Matrix4::Identity.Translate(random.UnitVector3() * 4.0f).Scale(Vector3(0.1f));
 
-			renderer.DrawQuad(model, Color(random.NextFloat(), random.NextFloat(), random.NextFloat(), 1.0f));
+			renderer.DrawQuad(model, random.NextColor());
 		}
 
 		renderer.EndFrame();

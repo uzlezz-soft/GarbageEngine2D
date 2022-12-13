@@ -67,7 +67,8 @@ project "GarbageEditor"
 		defines
         {
             "GARBAGE_DEBUG",
-            "_DEBUG"
+            "_DEBUG",
+			"GARBAGE_ENGINE_DLL"
         }
 
 		runtime "Debug"
@@ -78,7 +79,8 @@ project "GarbageEditor"
 		defines 
         {
             "GARBAGE_RELEASE",
-            "NDEBUG"
+            "NDEBUG",
+			"GARBAGE_ENGINE_DLL"
         }
 
 		runtime "Release"

@@ -89,17 +89,17 @@ public:
 
     float Trace() const { return (V[0][0] + V[1][1] + V[2][2] + V[3][3]); }
 
-    Matrix4 Translate(const Vector3& v);
+    Matrix4 Translate(const Vector3& v) const;
 
-    Matrix4 Scale(const Vector3& v);
+    Matrix4 Scale(const Vector3& v) const;
 
-    Matrix4 RotateX(float angle);
+    Matrix4 RotateX(float angle) const;
 
-    Matrix4 RotateY(float angle);
+    Matrix4 RotateY(float angle) const;
 
-    Matrix4 RotateZ(float angle);
+    Matrix4 RotateZ(float angle) const;
 
-    Matrix4 Rotate(const Vector3& axis, float angle);
+    Matrix4 Rotate(const Vector3& axis, float angle) const;
 
     static Matrix4 Frustum(const float left, const float right, const float bottom, const float top, const float zNear, const float zFar);
 

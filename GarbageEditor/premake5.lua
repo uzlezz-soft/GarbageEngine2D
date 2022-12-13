@@ -25,6 +25,7 @@ project "GarbageEditor"
 		"Source/Public",
 		"Source/Intermediate",
 		"%{Include.spdlog}",
+		"%{Include.pfd}",
         "%{wks.location}/GarbageEngine2D/Source/Public",
         "%{wks.location}/GarbageEngine2D/Source/Intermediate"
 	}

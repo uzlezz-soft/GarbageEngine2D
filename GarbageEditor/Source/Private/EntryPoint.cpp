@@ -11,14 +11,25 @@
 #include <Rendering/Shader.h>
 #include <Math/Random.h>
 #include <unordered_set>
+#include <portable-file-dialogs.h>
 
 int main()
 {
 	GarbageEditor::Init();
 	Window::InitSubsystem();
 
+	auto dialog = pfd::select_folder("Select working directory", "");
+
 	Ref<FileSystem> fileSystem = MakeRef<PhysicalFileSystem>();
-	((PhysicalFileSystem*)fileSystem.get())->SetWorkingDirectory("C:/Users/User/Desktop/Assets");
+
+	if (dialog.result().empty())
+	{
+		((PhysicalFileSystem*)fileSystem.get())->SetWorkingDirectory("C:/Users/User/Desktop/Assets");
+	}
+	else
+	{
+		((PhysicalFileSystem*)fileSystem.get())->SetWorkingDirectory(dialog.result());
+	}
 
 	AssetManager::Init(fileSystem);
 

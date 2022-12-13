@@ -13,8 +13,6 @@ class GARBAGE_API Shader final
 {
 public:
 
-    using Uniform = uint32;
-
     enum class Type
     {
         Vertex, Fragment, Geometry
@@ -25,7 +23,11 @@ public:
         Time, ScreenResolution, View, Projection, Model, MVP, ViewProjection
     };
 
-    Shader(const std::unordered_map<Type, std::string_view>& sources, const std::unordered_map<std::string_view, std::string>& parameters = std::unordered_map<std::string_view, std::string>());
+    using Uniform = uint32;
+    using Sources = std::unordered_map<Type, std::string_view>;
+    using Parameters = std::unordered_map<std::string_view, std::string>;
+
+    Shader(const Sources& sources, const Parameters& parameters = std::unordered_map<std::string_view, std::string>());
     ~Shader();
 
     void Bind();

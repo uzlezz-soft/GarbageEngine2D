@@ -27,6 +27,20 @@ Vector2& Vector2::operator-=(const Vector2& v)
 	return *this;
 }
 
+Vector2& Vector2::operator*=(const Vector2& v)
+{
+	X *= v.X;
+	Y *= v.Y;
+	return *this;
+}
+
+Vector2& Vector2::operator/=(const Vector2& v)
+{
+	X /= v.X;
+	Y /= v.Y;
+	return *this;
+}
+
 Vector2& Vector2::operator+=(const Vector3& v)
 {
 	X += v.X;
@@ -38,6 +52,20 @@ Vector2& Vector2::operator-=(const Vector3& v)
 {
 	X -= v.X;
 	Y -= v.Y;
+	return *this;
+}
+
+Vector2& Vector2::operator*=(const Vector3& v)
+{
+	X *= v.X;
+	Y *= v.Y;
+	return *this;
+}
+
+Vector2& Vector2::operator/=(const Vector3& v)
+{
+	X /= v.X;
+	Y /= v.Y;
 	return *this;
 }
 
@@ -55,6 +83,20 @@ Vector2& Vector2::operator-=(const Vector4& v)
 	return *this;
 }
 
+Vector2& Vector2::operator*=(const Vector4& v)
+{
+	X *= v.X;
+	Y *= v.Y;
+	return *this;
+}
+
+Vector2& Vector2::operator/=(const Vector4& v)
+{
+	X /= v.X;
+	Y /= v.Y;
+	return *this;
+}
+
 const Vector2 Vector2::operator+(const Vector2& v) const
 {
 	return Vector2(X + v.X, Y + v.Y);
@@ -63,6 +105,16 @@ const Vector2 Vector2::operator+(const Vector2& v) const
 const Vector2 Vector2::operator-(const Vector2& v) const
 {
 	return Vector2(X - v.X, Y - v.Y);
+}
+
+const Vector2 Vector2::operator*(const Vector2& v) const
+{
+	return Vector2(X * v.X, Y * v.Y);
+}
+
+const Vector2 Vector2::operator/(const Vector2& v) const
+{
+	return Vector2(X / v.X, Y / v.Y);
 }
 
 const Vector3 Vector2::operator+(const Vector3& v) const
@@ -75,6 +127,16 @@ const Vector3 Vector2::operator-(const Vector3& v) const
 	return Vector3(X - v.X, Y - v.Y, -v.Z);
 }
 
+const Vector3 Vector2::operator*(const Vector3& v) const
+{
+	return Vector3(X * v.X, Y * v.Y, v.Z);
+}
+
+const Vector3 Vector2::operator/(const Vector3& v) const
+{
+	return Vector3(X / v.X, Y / v.Y, v.Z);
+}
+
 const Vector4 Vector2::operator+(const Vector4& v) const
 {
 	return Vector4(X + v.X, Y + v.Y, v.Z, v.W);
@@ -83,6 +145,16 @@ const Vector4 Vector2::operator+(const Vector4& v) const
 const Vector4 Vector2::operator-(const Vector4& v) const
 {
 	return Vector4(X - v.X, Y - v.Y, -v.Z, -v.W);
+}
+
+const Vector4 Vector2::operator*(const Vector4& v) const
+{
+	return Vector4(X * v.X, Y * v.Y, v.Z, v.W);
+}
+
+const Vector4 Vector2::operator/(const Vector4& v) const
+{
+	return Vector4(X / v.X, Y / v.Y, v.Z, v.W);
 }
 
 Vector2& Vector2::operator*=(float n)

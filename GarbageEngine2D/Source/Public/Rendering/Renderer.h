@@ -19,7 +19,7 @@ public:
 
 	enum class BlendMode
 	{
-		Additive
+		Default, Additive
 	};
 
 	enum class FaceCullingMode
@@ -37,6 +37,7 @@ public:
 		uint32 DrawCalls{ 0 };
 		uint32 TotalNumberOfVertices{ 0 };
 		float FrameTime{ 0.0f };
+		uint64 QuadCount{ 0 };
 
 		void Reset()
 		{
@@ -44,6 +45,8 @@ public:
 			TotalNumberOfVertices = 0;
 
 			FrameTime = 0.0f;
+
+			QuadCount = 0;
 		}
 	};
 
@@ -60,6 +63,9 @@ public:
 
 	void DrawVertexArray(const VertexArray& vertexArray);
 	void DrawVertexArray(const VertexArray& vertexArray, const IndexBuffer& indexBuffer);
+	void DrawVertexArray(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, uint64 count);
+
+	void DrawQuad(const Matrix4& transform, const Color& color);
 
 	void EnableFeature(Feature feature);
 	void DisableFeature(Feature feature);
@@ -71,6 +77,16 @@ public:
 
 	const Statistics& GetStatistics() const;
 
+	int32 GetNumberOfSupportedVertexAttributes() const { return m_numberOfSupportedVertexAttributes; }
+	int32 GetMaxTextureSize() const { return m_maxTextureSize; }
+	int32 GetNumberOfTextureUnits() const { return m_numberOfTextureUnits; }
+
 	NON_COPYABLE(Renderer)
+
+private:
+
+	int32 m_numberOfSupportedVertexAttributes;
+	int32 m_maxTextureSize;
+	int32 m_numberOfTextureUnits;
 
 };

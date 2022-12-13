@@ -213,7 +213,7 @@ static std::string_view GarbageEngineShaderTypeToString(Shader::Type type)
 	return 0;
 }
 
-Shader::Shader(const std::unordered_map<Type, std::string_view>& sources, const std::unordered_map<std::string_view, std::string>& parameters) : m_id(0)
+Shader::Shader(const Sources& sources, const Parameters& parameters) : m_id(0)
 {
 	//uint32 vertexShader = Utils::CompileShader(Utils::ShaderType::Vertex, source);
 	//uint32 fragmentShader = Utils::CompileShader(Utils::ShaderType::Fragment, source);

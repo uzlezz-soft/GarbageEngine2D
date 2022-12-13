@@ -39,16 +39,28 @@ public:
 
 	Vector2& operator+=(const Vector2& v);
 	Vector2& operator-=(const Vector2& v);
+	Vector2& operator*=(const Vector2& v);
+	Vector2& operator/=(const Vector2& v);
 	Vector2& operator+=(const Vector3& v);
 	Vector2& operator-=(const Vector3& v);
+	Vector2& operator*=(const Vector3& v);
+	Vector2& operator/=(const Vector3& v);
 	Vector2& operator+=(const Vector4& v);
 	Vector2& operator-=(const Vector4& v);
+	Vector2& operator*=(const Vector4& v);
+	Vector2& operator/=(const Vector4& v);
 	const Vector2 operator+(const Vector2& v) const;
 	const Vector2 operator-(const Vector2& v) const;
+	const Vector2 operator*(const Vector2& v) const;
+	const Vector2 operator/(const Vector2& v) const;
 	const Vector3 operator+(const Vector3& v) const;
 	const Vector3 operator-(const Vector3& v) const;
+	const Vector3 operator*(const Vector3& v) const;
+	const Vector3 operator/(const Vector3& v) const;
 	const Vector4 operator+(const Vector4& v) const;
 	const Vector4 operator-(const Vector4& v) const;
+	const Vector4 operator*(const Vector4& v) const;
+	const Vector4 operator/(const Vector4& v) const;
 
 	Vector2& operator*=(float n);
 	Vector2& operator/=(float n);

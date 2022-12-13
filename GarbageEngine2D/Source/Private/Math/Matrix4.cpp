@@ -141,23 +141,11 @@ Matrix4 Matrix4::operator*(const Matrix4& n) const
 
 Vector3 Matrix4::operator*(const Vector3& v) const
 {
-    /*const Vector3 u = Vector3(V[0][0] * v.X + V[0][1] * v.Y + V[0][2] * v.Z + V[0][3],
-        V[1][0] * v.X + V[1][1] * v.Y + V[1][2] * v.Z + V[1][3],
-        V[2][0] * v.X + V[2][1] * v.Y + V[2][2] * v.Z + V[2][3]);
-    const float w = V[3][0] * v.X + V[3][1] * v.Y + V[3][2] * v.Z + V[3][3];
-    return u / w;*/
-
     return operator*((Vector4)v);
 }
 
 Vector4 Matrix4::operator*(const Vector4& v) const
 {
-    /*Vector4 u = Vector4(V[0][0] * v.X + V[0][1] * v.Y + V[0][2] * v.Z + v.W * V[0][3],
-        V[1][0] * v.X + V[1][1] * v.Y + V[1][2] * v.Z + v.W * V[1][3],
-        V[2][0] * v.X + V[2][1] * v.Y + V[2][2] * v.Z + v.W * V[2][3],
-        V[3][0] * v.X + V[3][1] * v.Y + V[3][2] * v.Z + v.W * V[3][3]);
-    return u.W != 0 ? u / u.W : u;*/
-
     const Vector4 Mov0(v.Data[0]);
     const Vector4 Mov1(v.Data[1]);
     const Vector4 Mul0 = M[0] * Mov0;

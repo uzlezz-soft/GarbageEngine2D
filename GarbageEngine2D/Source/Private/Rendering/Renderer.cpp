@@ -90,9 +90,6 @@ void Renderer::Init()
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_maxTextureSize);
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &m_numberOfTextureUnits);
 
-	// Making OpenGL work with left-handed matrices
-	glFrontFace(GL_CW);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	s_data.QuadVertexArray = MakeRef<VertexArray>();
@@ -274,8 +271,11 @@ void Renderer::DisableFeature(Renderer::Feature feature)
 
 void Renderer::SetBlendMode(BlendMode blendMode)
 {
-	if (blendMode == BlendMode::Additive) glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	else if (blendMode == BlendMode::Default) glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	switch (blendMode)
+	{
+		case Renderer::BlendMode::Default: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
+		case Renderer::BlendMode::Additive:glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
+	}
 }
 
 void Renderer::SetDepthFunction(DepthFunction depthFunction)

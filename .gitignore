@@ -441,3 +441,5 @@ Bin/
 **.sln
 **.vcxproj
 **.vcxproj.filters
+
+.vscode/

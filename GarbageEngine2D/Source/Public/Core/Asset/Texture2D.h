@@ -33,7 +33,7 @@ private:
 
 };
 
-GCLASS(AssetType(Texture2DAsset), SourceFileFormats(png, jpg, tga, bmp, gif), ConvertedFormat(gbtex2d));
+GCLASS(AssetType(Texture2DAsset), SourceFileFormats(png, jpg, tga, bmp, gif, pic, psd), ConvertedFormat(gbtex2d));
 class GARBAGE_API Texture2DAssetFactory final : public AssetFactory
 {
 	GENERATED_BODY()

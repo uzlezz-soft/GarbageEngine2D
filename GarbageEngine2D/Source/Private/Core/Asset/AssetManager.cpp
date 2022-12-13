@@ -1,6 +1,21 @@
 #include "Core/Asset/AssetManager.h"
 #include "Core/Asset/Asset.h"
 #include "Core/Registry.h"
+#include <algorithm>
+#include <cctype>
+
+static bool StripFileExtension(const std::filesystem::path& name, std::string& out)
+{
+	auto extension_ = name.extension();
+
+	auto extensionString = extension_.string();
+	if (extensionString.size() <= 1) return false;
+
+	out = extensionString.substr(1);
+
+	std::transform(out.begin(), out.end(), out.begin(),
+		[](unsigned char c) { return std::tolower(c); });
+}
 
 AssetManager::AssetManager() : m_allocator(1024)
 {
@@ -39,15 +54,7 @@ void AssetManager::Init(Ref<FileSystem> fileSystem)
 Ref<Asset> AssetManager::LoadAsset(const std::filesystem::path& name)
 {
 	std::string extension;
-
-	{
-		auto extension_ = name.extension();
-
-		auto extensionString = extension_.string();
-		if (extensionString.size() <= 1) return nullptr;
-
-		extension = extensionString.substr(1);
-	}
+	if (!StripFileExtension(name, extension)) return nullptr;
 
 	auto file = Get().m_fileSystem->OpenFile(Get().m_fileSystem->FindFile(name).value());
 
@@ -158,15 +165,7 @@ void AssetManager::SaveAsset(Asset* asset, const std::filesystem::path& path)
 AssetManager::AssetType AssetManager::GetAssetType(const std::filesystem::path& name)
 {
 	std::string extension;
-
-	{
-		auto extension_ = name.extension();
-
-		auto extensionString = extension_.string();
-		if (extensionString.size() <= 1) return AssetType::Unknown;
-
-		extension = extensionString.substr(1);
-	}
+	if (!StripFileExtension(name, extension)) return AssetType::Unknown;
 
 	for (auto& factory : Get().m_factories)
 	{
@@ -199,15 +198,7 @@ AssetManager::AssetType AssetManager::GetAssetType(const std::filesystem::path& 
 bool AssetManager::SourceAssetHasCookedAsset(const std::filesystem::path& name)
 {
 	std::string extension;
-
-	{
-		auto extension_ = name.extension();
-
-		auto extensionString = extension_.string();
-		if (extensionString.size() <= 1) return false;
-
-		extension = extensionString.substr(1);
-	}
+	if (!StripFileExtension(name, extension)) return false;
 
 	auto path = name.parent_path();
 	auto stem = name.stem().generic_string() + ".";

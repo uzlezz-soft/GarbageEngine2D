@@ -9,6 +9,7 @@
 #include <Core/Asset/Texture2D.h>
 #include <Rendering/Texture.h>
 #include <Rendering/Shader.h>
+#include <Math/Random.h>
 #include <unordered_set>
 
 int main()
@@ -42,6 +43,8 @@ int main()
 	renderer.EnableFeature(Renderer::Feature::AlphaBlending);
 	renderer.SetBlendMode(Renderer::BlendMode::Default);
 
+	Random random;
+
 	while (window.IsOpened())
 	{
 		window.PollEvents();
@@ -61,7 +64,17 @@ int main()
 
 		renderer.DrawQuad(model, Color(1.0f, 0.0f, 0.0f, 1.0f));
 
+		for (uint32 i = 0; i < 20000; i++)
+		{
+			model = Matrix4(1.0f).Translate(random.UnitVector3() * 4.0f).Scale(Vector3(0.1f));
+
+			renderer.DrawQuad(model, Color(random.NextFloat(), random.NextFloat(), random.NextFloat(), 1.0f));
+		}
+
 		renderer.EndFrame();
+
+		auto stats = renderer.GetStatistics();
+		window.SetTitle(std::to_string(stats.DrawCalls) + " draw call(s) | " + std::to_string(stats.TotalNumberOfVertices) + " vertices");
 
 		window.SwapBuffers();
 	}

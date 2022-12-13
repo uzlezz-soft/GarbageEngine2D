@@ -20,11 +20,14 @@ struct GARBAGE_ALIGN(32) QuadVertex
 	Color Color;
 };
 
+static constexpr uint64 QuadVertexCount = 4;
+static constexpr uint64 QuadIndexCount = 6;
+
 static struct Renderer2DData
 {
 	static const uint32_t MaxQuads = 20000;
-	static const uint32_t MaxVertices = MaxQuads * 4;
-	static const uint32_t MaxIndices = MaxQuads * 6;
+	static const uint32_t MaxVertices = MaxQuads * QuadVertexCount;
+	static const uint32_t MaxIndices = MaxQuads * QuadIndexCount;
 
 	Ref<VertexArray> QuadVertexArray;
 	Ref<VertexBuffer> QuadVertexBuffer;
@@ -37,7 +40,7 @@ static struct Renderer2DData
 
 	uint32 QuadIndexCount = 0;
 
-	Vector2 QuadVertexPositions[4];
+	Vector2 QuadVertexPositions[QuadVertexCount];
 
 	Matrix4 Projection{ 0.0f };
 	Matrix4 View{ 0.0f };
@@ -60,14 +63,14 @@ static uint32 GarbageEngineRenderingDepthFunctionToOpenGL(Renderer::DepthFunctio
 {
 	switch (function)
 	{
-	case Renderer::DepthFunction::LessOrEqual: return GL_LEQUAL;
-	case Renderer::DepthFunction::Less: return GL_LESS;
-	case Renderer::DepthFunction::Equal: return GL_EQUAL;
-	case Renderer::DepthFunction::Greater: return GL_GREATER;
-	case Renderer::DepthFunction::GreaterOrEqual: return GL_GEQUAL;
-	case Renderer::DepthFunction::NotEqual: return GL_NOTEQUAL;
-	case Renderer::DepthFunction::Always: return GL_ALWAYS;
-	case Renderer::DepthFunction::Never: return GL_NEVER;
+		case Renderer::DepthFunction::LessOrEqual: return GL_LEQUAL;
+		case Renderer::DepthFunction::Less: return GL_LESS;
+		case Renderer::DepthFunction::Equal: return GL_EQUAL;
+		case Renderer::DepthFunction::Greater: return GL_GREATER;
+		case Renderer::DepthFunction::GreaterOrEqual: return GL_GEQUAL;
+		case Renderer::DepthFunction::NotEqual: return GL_NOTEQUAL;
+		case Renderer::DepthFunction::Always: return GL_ALWAYS;
+		case Renderer::DepthFunction::Never: return GL_NEVER;
 	}
 
 	GARBAGE_CORE_ASSERT(false, "Unknown depth function: {}", (uint32)function);
@@ -109,7 +112,7 @@ void Renderer::Init()
 	uint32* quadIndices = new uint32[s_data.MaxIndices];
 
 	uint32 offset = 0;
-	for (uint32 i = 0; i < s_data.MaxIndices; i += 6)
+	for (uint32 i = 0; i < s_data.MaxIndices; i += QuadIndexCount)
 	{
 		quadIndices[i + 0] = offset + 0;
 		quadIndices[i + 1] = offset + 1;
@@ -119,7 +122,7 @@ void Renderer::Init()
 		quadIndices[i + 4] = offset + 2;
 		quadIndices[i + 5] = offset + 3;
 
-		offset += 4;
+		offset += QuadVertexCount;
 	}
 
 	s_data.QuadIndexBuffer = MakeRef<IndexBuffer>(quadIndices, s_data.MaxIndices);
@@ -196,21 +199,12 @@ void Renderer::BeginNewFrame(const Matrix4& projection, const Matrix4& view)
 	s_data.View = view;
 	s_data.ViewProjection = projection * view;
 
-	s_data.QuadIndexCount = 0;
-	s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase.get();
+	StartBatch();
 }
 
 void Renderer::EndFrame()
 {
-	if (s_data.QuadIndexCount)
-	{
-		uint32 dataSize = (uint32)((uint8*)s_data.QuadVertexBufferPtr - (uint8*)s_data.QuadVertexBufferBase.get());
-		s_data.QuadVertexBuffer->UpdateData(s_data.QuadVertexBufferBase.get(), dataSize);
-
-		s_data.QuadShader->Bind();
-		s_data.QuadShader->SetMatrix4(s_data.QuadShader->GetUniformLocation(Shader::CachedUniform::ViewProjection), s_data.ViewProjection);
-		DrawVertexArray(*s_data.QuadVertexArray, *s_data.QuadIndexBuffer, s_data.QuadIndexCount);
-	}
+	FlushBatch();
 
 	s_statistics.FrameTime = s_rendererTimer.GetElapsedMilliseconds();
 }
@@ -238,14 +232,13 @@ void Renderer::DrawVertexArray(const VertexArray& vertexArray, const IndexBuffer
 	glDrawElements(GL_TRIANGLES, (GLsizei)size, GL_UNSIGNED_INT, nullptr);
 
 	s_statistics.DrawCalls++;
-	s_statistics.TotalNumberOfVertices += vertexArray.GetNumberOfVertices();
 }
 
 void Renderer::DrawQuad(const Matrix4& transform, const Color& color)
 {
-	constexpr uint64 quadVertexCount = 4;
+	if (s_data.QuadIndexCount + QuadIndexCount >= Renderer2DData::MaxIndices) NextBatch();
 
-	for (uint64 i = 0; i < quadVertexCount; i++)
+	for (uint64 i = 0; i < QuadVertexCount; i++)
 	{
 		s_data.QuadVertexBufferPtr->Position = transform * Vector4(s_data.QuadVertexPositions[i], 1.0f, 1.0f);
 		s_data.QuadVertexBufferPtr->Color = color;
@@ -291,4 +284,30 @@ void Renderer::SetFaceCullingMode(FaceCullingMode mode)
 const Renderer::Statistics& Renderer::GetStatistics() const
 {
 	return s_statistics;
+}
+
+void Renderer::StartBatch()
+{
+	s_data.QuadIndexCount = 0;
+	s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase.get();
+}
+
+void Renderer::FlushBatch()
+{
+	if (s_data.QuadIndexCount)
+	{
+		uint32 dataSize = (uint32)((uint8*)s_data.QuadVertexBufferPtr - (uint8*)s_data.QuadVertexBufferBase.get());
+		s_data.QuadVertexBuffer->UpdateData(s_data.QuadVertexBufferBase.get(), dataSize);
+
+		s_data.QuadShader->Bind();
+		s_data.QuadShader->SetMatrix4(s_data.QuadShader->GetUniformLocation(Shader::CachedUniform::ViewProjection), s_data.ViewProjection);
+		DrawVertexArray(*s_data.QuadVertexArray, *s_data.QuadIndexBuffer, dataSize);
+		s_statistics.TotalNumberOfVertices += dataSize / sizeof(QuadVertex);
+	}
+}
+
+void Renderer::NextBatch()
+{
+	FlushBatch();
+	StartBatch();
 }

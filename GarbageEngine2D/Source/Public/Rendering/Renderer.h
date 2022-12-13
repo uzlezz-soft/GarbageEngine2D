@@ -48,6 +48,9 @@ public:
 
 			QuadCount = 0;
 		}
+
+		float GetFrameTimeSeconds() const { return FrameTime / 1000.0f; }
+		float GetFrameTimeMilliseconds() const { return FrameTime; }
 	};
 
 	Renderer() = default;
@@ -88,5 +91,9 @@ private:
 	int32 m_numberOfSupportedVertexAttributes;
 	int32 m_maxTextureSize;
 	int32 m_numberOfTextureUnits;
+	
+	void StartBatch();
+	void FlushBatch();
+	void NextBatch();
 
 };

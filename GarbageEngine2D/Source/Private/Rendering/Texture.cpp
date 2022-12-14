@@ -134,13 +134,13 @@ Texture::~Texture()
 	glDeleteTextures(1, &m_id);
 }
 
-void Texture::Bind(uint8 slot)
+void Texture::Bind(uint8 slot) const
 {
 	GLCall(glActiveTexture(GL_TEXTURE0 + (uint32)slot));
 	GLCall(glBindTexture(m_type, m_id));
 }
 
-bool Texture::operator==(const Texture& other)
+bool Texture::operator==(const Texture& other) const
 {
 	return m_type == other.m_type && m_id == other.m_id;
 }

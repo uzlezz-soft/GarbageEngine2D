@@ -52,7 +52,7 @@ public:
 	Texture(const Specification& specification) {}
 	virtual ~Texture();
 
-	void Bind(uint8 slot = 0);
+	void Bind(uint8 slot = 0) const;
 
 	virtual void SetData(void* data, uint32 size) = 0;
 
@@ -60,7 +60,7 @@ public:
 	uint32 GetHeight() const { return m_height; }
 	Format GetFormat() const { return m_format; }
 
-	bool operator==(const Texture& other);
+	bool operator==(const Texture& other) const;
 
 protected:
 

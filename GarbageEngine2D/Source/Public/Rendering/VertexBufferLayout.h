@@ -34,6 +34,13 @@ struct GARBAGE_API VertexBufferLayout final
 	}
 
 	template <>
+	void Push<int32>(uint32 count)
+	{
+		m_elements.push_back({ count, 0x1404, false });
+		m_stride += sizeof(int32) * count;
+	}
+
+	template <>
 	void Push<uint32>(uint32 count)
 	{
 		m_elements.push_back({ count, 0x1405, false });

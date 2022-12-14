@@ -2,10 +2,11 @@
 
 #include "Core/Base.h"
 #include "Core/Log.h"
+#include <filesystem>
 
 #ifdef GARBAGE_ENABLE_ASSERTS
 
-consteval const char* GetFileName(const char* path)
+/*consteval const char* GetFileName(const char* path)
 {
 	const char* file = path;
 
@@ -19,7 +20,7 @@ consteval const char* GetFileName(const char* path)
 	}
 
 	return file;
-}
+}*/
 
 #define GARBAGE_EXPAND_MACRO(x) x
 #define GARBAGE_STRINGIFY_MACRO(x) #x
@@ -28,7 +29,7 @@ consteval const char* GetFileName(const char* path)
 
 #define GARBAGE_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { GARBAGE_EXPAND_MACRO(GARBAGE_EXPAND_MACRO(GET_LOG_MACRO_ERROR(type))(msg, __VA_ARGS__)); GARBAGE_DEBUGBREAK(); } }
 #define GARBAGE_INTERNAL_ASSERT_WITH_MSG(type, check, ...) GARBAGE_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
-#define GARBAGE_INTERNAL_ASSERT_NO_MSG(type, check, ...) GARBAGE_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", GARBAGE_STRINGIFY_MACRO(check), GetFileName(__FILE__), __LINE__)
+#define GARBAGE_INTERNAL_ASSERT_NO_MSG(type, check, ...) GARBAGE_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", GARBAGE_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename(), __LINE__)
 
 #define GARBAGE_INTERNAL_ASSERT_GET_MACRO_NAME(arg1, arg2, macro, ...) macro
 #define GARBAGE_INTERNAL_ASSERT_GET_MACRO(...) GARBAGE_EXPAND_MACRO( GARBAGE_INTERNAL_ASSERT_GET_MACRO_NAME(__VA_ARGS__, GARBAGE_INTERNAL_ASSERT_WITH_MSG, GARBAGE_INTERNAL_ASSERT_NO_MSG) )

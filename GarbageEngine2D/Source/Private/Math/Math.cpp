@@ -1,5 +1,8 @@
 #include "Math/Math.h"
+#include "Math/Random.h"
 #include <cmath>
+
+static Random s_random;
 
 // There are never too many Pi digits... Muhahahha!
 float Math::Pi = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899f;
@@ -65,3 +68,9 @@ float Math::CyllinderBaseArea(float radius) { return CircleArea(radius); }
 float Math::CyllinderSideSurfaceArea(float radius, float height) { return CircleLength(radius) * height; }
 float Math::CyllinderArea(float radius, float height) { return 2.0f * CyllinderBaseArea(radius) + CyllinderSideSurfaceArea(radius, height); }
 float Math::CyllinderVolume(float radius, float height) { return Pi * Square(radius) * height; }
+
+float Math::RandomFloat() { return s_random.NextFloat(); }
+float Math::RandomFloat(float min, float max) { return s_random.NextFloat(min, max); }
+
+int32 Math::RandomInt32(int32 max) { return s_random.Next(max); }
+int32 Math::RandomInt32(int32 min, int32 max) { return s_random.Next(min, max); }

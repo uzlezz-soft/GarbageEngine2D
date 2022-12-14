@@ -7,6 +7,7 @@
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
 #include "Math/Matrix4.h"
+#include "Rendering/Texture.h"
 
 class GARBAGE_API Renderer
 {
@@ -68,7 +69,7 @@ public:
 	void DrawVertexArray(const VertexArray& vertexArray, const IndexBuffer& indexBuffer);
 	void DrawVertexArray(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, uint64 count);
 
-	void DrawQuad(const Matrix4& transform, const Color& color);
+	void DrawQuad(const Matrix4& transform, const Color& color = Color::White, const Texture2D* texture = nullptr, float tiling = 1.0f);
 
 	void EnableFeature(Feature feature);
 	void DisableFeature(Feature feature);

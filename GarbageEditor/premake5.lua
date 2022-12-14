@@ -47,7 +47,9 @@ project "GarbageEditor"
 		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.so %{wks.location}Bin/" .. outputdir .. "/GarbageEditor",
 		"{COPY} %{wks.location}Bin/" .. outputdir .. "/GarbageEngine2D/*.pdb %{wks.location}Bin/" .. outputdir .. "/GarbageEditor"
 	}
-
+	
+	disablewarnings { "4251", "4005" }
+	
 	filter "system:windows"
 		systemversion "latest"
 

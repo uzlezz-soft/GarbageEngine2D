@@ -13,11 +13,14 @@
 static Renderer::Statistics s_statistics;
 static Timer s_rendererTimer;
 
-struct GARBAGE_ALIGN(32) QuadVertex
+struct QuadVertex
 {
 	// Using Vector4 instead of Vector2 for Position is because of aligning issues :(
 	Vector4 Position;
 	Color Color;
+	Vector2 TexCoord;
+	float TexIndex{ 0.0f };
+	float Tiling{ 1.0f };
 };
 
 static constexpr uint64 QuadVertexCount = 4;
@@ -37,6 +40,9 @@ static struct Renderer2DData
 
 	Scope<QuadVertex[]> QuadVertexBufferBase = nullptr;
 	QuadVertex* QuadVertexBufferPtr = nullptr;
+
+	Scope<const Texture2D*[]> TextureSlots;
+	uint32 TextureSlotIndex = 1;
 
 	uint32 QuadIndexCount = 0;
 
@@ -102,6 +108,9 @@ void Renderer::Init()
 	VertexBufferLayout layout;
 	layout.Push<Vector4>(1);
 	layout.Push<Color>(1);
+	layout.Push<Vector2>(1);
+	layout.Push<float>(1);
+	layout.Push<float>(1);
 
 	GARBAGE_CORE_ASSERT(layout.GetStride() == sizeof(QuadVertex));
 
@@ -132,6 +141,7 @@ void Renderer::Init()
 
 	whiteTextureSpecification.Width = whiteTextureSpecification.Height = 1;
 	uint32_t whiteTextureData = 0xffffffff;
+	whiteTextureSpecification.Format = Texture::Format::RGBA8;
 	whiteTextureSpecification.Data = &whiteTextureData;
 
 	s_data.WhiteTexture = MakeRef<Texture2D>(whiteTextureSpecification);
@@ -141,8 +151,14 @@ void Renderer::Init()
 	sources[Shader::Type::Vertex] = R"(
 		layout (location = 0) in vec4 a_Position;
 		layout (location = 1) in vec4 a_Color;
+		layout (location = 2) in vec2 a_TexCoord;
+		layout (location = 3) in float a_TexIndex;
+		layout (location = 4) in float a_Tiling;
 		
 		out vec4 Color;
+		out vec2 TexCoord;
+		out float TexIndex;
+		out float Tiling;
 		
 		uniform mat4 u_viewProjection;
 		
@@ -150,26 +166,68 @@ void Renderer::Init()
 		{
 			gl_Position = u_viewProjection * vec4(a_Position.x, a_Position.y, 0.0, 1.0);
 			Color = a_Color;
+			TexCoord = a_TexCoord;
+			TexIndex = a_TexIndex;
+			Tiling = a_Tiling;
 		}
 )";
 
-	sources[Shader::Type::Fragment] = R"(
+	std::stringstream fragment;
+
+	fragment << R"(
 		out vec4 OutColor;
 		
 		in vec4 Color;
+		in vec2 TexCoord;
+		in float TexIndex;
+		in float Tiling;
+		
+		uniform sampler2D u_textures[)";
+		fragment.operator<<(m_numberOfTextureUnits);
+		fragment << R"(];
 		
 		void main()
 		{
-			OutColor = Color;
+			vec4 color = Color;
+			
+			switch (int(TexIndex))
+			{
+)";
+
+		for (uint32 i = 0; i < m_numberOfTextureUnits; i++)
+		{
+			fragment << "case " << i << ": color *= texture2D(u_textures[" << i << "], TexCoord * Tiling); break;\n";
+		}
+		fragment << R"(}
+
+			OutColor = color;
 		}
 )";
 
+	std::string source = fragment.str();
+
+	sources[Shader::Type::Fragment] = source;
+
 	s_data.QuadShader = MakeRef<Shader>(sources);
 
+	s_data.QuadShader->Bind();
+
+	for (uint32 i = 0; i < m_numberOfTextureUnits; i++)
+	{
+		std::stringstream ss;
+		ss << "u_textures[" << i << "]";
+		std::string uniform = ss.str();
+
+		s_data.QuadShader->SetInt32(uniform, i);
+	}
+	
 	s_data.QuadVertexPositions[0] = Vector2(-0.5f, 0.5f);
 	s_data.QuadVertexPositions[1] = Vector2(-0.5f, -0.5f);
 	s_data.QuadVertexPositions[2] = Vector2(0.5f, -0.5f);
 	s_data.QuadVertexPositions[3] = Vector2(0.5f, 0.5f);
+
+	s_data.TextureSlots = MakeScope<const Texture2D*[]>(m_numberOfTextureUnits);
+	s_data.TextureSlots[0] = s_data.WhiteTexture.get();
 
 	std::stringstream ss;
 	ss << std::this_thread::get_id();
@@ -234,14 +292,64 @@ void Renderer::DrawVertexArray(const VertexArray& vertexArray, const IndexBuffer
 	s_statistics.DrawCalls++;
 }
 
-void Renderer::DrawQuad(const Matrix4& transform, const Color& color)
+void Renderer::DrawQuad(const Matrix4& transform, const Color& color, const Texture2D* texture, float tiling)
 {
+	static const Vector2 textureCoords[] = { { 0.0f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f } };
+
 	if (s_data.QuadIndexCount + QuadIndexCount >= Renderer2DData::MaxIndices) NextBatch();
+
+	uint32 textureIndex = 0;
+
+	if (texture)
+	{
+		if (s_data.TextureSlotIndex >= m_numberOfTextureUnits)
+		{
+			NextBatch();
+
+			textureIndex = 1;
+			s_data.TextureSlots[s_data.TextureSlotIndex++] = texture;
+		}
+		else
+		{
+			const uint32 numberOfTextures = Math::Min(s_data.TextureSlotIndex, m_numberOfTextureUnits);
+
+			for (uint32 i = numberOfTextures; i > 0; i--)
+			{
+				if (s_data.TextureSlots[i])
+				{
+					if (*s_data.TextureSlots[i] == *texture)
+					{
+						textureIndex = i;
+						break;
+					}
+				}
+				else
+				{
+					textureIndex = i;
+					s_data.TextureSlotIndex = i;
+					s_data.TextureSlots[s_data.TextureSlotIndex++] = texture;
+
+					break;
+				}
+			}
+
+			if (textureIndex == 0)
+			{
+				NextBatch();
+
+				textureIndex = s_data.TextureSlotIndex;
+				s_data.TextureSlots[s_data.TextureSlotIndex++] = texture;
+			}
+		}
+	}
 
 	for (uint64 i = 0; i < QuadVertexCount; i++)
 	{
 		s_data.QuadVertexBufferPtr->Position = transform * Vector4(s_data.QuadVertexPositions[i], 1.0f, 1.0f);
 		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->TexIndex = (float)textureIndex;
+		s_data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
+		s_data.QuadVertexBufferPtr->Tiling = tiling;
 		s_data.QuadVertexBufferPtr++;
 	}
 
@@ -290,6 +398,13 @@ void Renderer::StartBatch()
 {
 	s_data.QuadIndexCount = 0;
 	s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase.get();
+
+	for (uint32 i = 1; i < m_numberOfTextureUnits; i++)
+	{
+		s_data.TextureSlots[i] = nullptr;
+	}
+
+	s_data.TextureSlotIndex = 1;
 }
 
 void Renderer::FlushBatch()
@@ -298,6 +413,11 @@ void Renderer::FlushBatch()
 	{
 		uint32 dataSize = (uint32)((uint8*)s_data.QuadVertexBufferPtr - (uint8*)s_data.QuadVertexBufferBase.get());
 		s_data.QuadVertexBuffer->UpdateData(s_data.QuadVertexBufferBase.get(), dataSize);
+
+		for (uint32 i = 0; i < s_data.TextureSlotIndex; i++)
+		{
+			if (s_data.TextureSlots[i]) s_data.TextureSlots[i]->Bind((uint8)i);
+		}
 
 		s_data.QuadShader->Bind();
 		s_data.QuadShader->SetMatrix4(s_data.QuadShader->GetUniformLocation(Shader::CachedUniform::ViewProjection), s_data.ViewProjection);

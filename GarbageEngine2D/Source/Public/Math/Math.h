@@ -66,6 +66,12 @@ public:
 	static float CyllinderArea(float radius, float height);
 	static float CyllinderVolume(float radius, float height);
 
+	static float RandomFloat();
+	static float RandomFloat(float min, float max);
+
+	static int32 RandomInt32(int32 max);
+	static int32 RandomInt32(int32 min, int32 max);
+
 private:
 
 	Math() = default;

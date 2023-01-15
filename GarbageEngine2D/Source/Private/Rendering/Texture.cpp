@@ -89,12 +89,16 @@ static uint32 GarbageEngineFilteringToOpenGLFiltering(Texture::Filtering filteri
 }
 
 template <typename T>
-concept Number = std::is_arithmetic_v<T>;
-
-template <Number T>
 FORCEINLINE static bool IsPowerOfTwo(T n)
 {
-	return n >= 2 && (Math::Ceil(Math::Log(n)) == Math::Floor(Math::Log(n)));
+	if constexpr (std::is_arithmetic<T>::value)
+	{
+		return n >= 2 && (Math::Ceil(Math::Log(n)) == Math::Floor(Math::Log(n)));
+	}
+	else
+	{
+		static_assert(std::is_arithmetic<T>::value, "T must be arithmetic type!");
+	}
 }
 
 static uint32 GetNumberOfMipLevels(uint16 resolutionX, uint16 resolutionY)

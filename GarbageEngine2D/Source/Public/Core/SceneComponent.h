@@ -29,7 +29,7 @@ class GARBAGE_API Entity : public SceneComponent
 public:
 
 	GPROPERTY();
-	std::u8string Name;
+	std::string Name;
 	GPROPERTY();
 	SceneComponent* Parent;
 

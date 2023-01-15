@@ -64,10 +64,10 @@ public:
 
 	Vector2& operator*=(float n);
 	Vector2& operator/=(float n);
-	friend Vector2 operator*(const Vector2& v, float n);
-	friend Vector2 operator*(float n, const Vector2& v);
-	friend Vector2 operator/(const Vector2& v, float n);
-	friend Vector2 operator/(float n, const Vector2& v);
+	GARBAGE_API friend Vector2 operator*(const Vector2& v, float n);
+	GARBAGE_API friend Vector2 operator*(float n, const Vector2& v);
+	GARBAGE_API friend Vector2 operator/(const Vector2& v, float n);
+	GARBAGE_API friend Vector2 operator/(float n, const Vector2& v);
 
 	void Normalize();
 	void Project(const Vector2& other);

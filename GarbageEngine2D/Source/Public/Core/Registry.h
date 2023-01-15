@@ -6,6 +6,7 @@
 #include "Memory/Allocator.h"
 #include <functional>
 #include <type_traits>
+#include <optional>
 
 namespace Meta { class Type; class Registry; }
 
@@ -30,15 +31,14 @@ private:
 
 };
 
-template <typename T>
-concept EngineObject = std::is_base_of_v<ObjectBase, T>;
-
 namespace Meta
 {
 
 	class GARBAGE_API Enum final
 	{
 	public:
+
+		using ValuesMap = std::unordered_map<int64, std::string>;
 
 		static const int64 UnknownValue = -9223372036854775807;
 
@@ -52,8 +52,7 @@ namespace Meta
 		// If nothing is found, returns Unknown
 		const std::string ValueToString(int64 value) const;
 
-		// If nothing is found, returns UnknownValue
-		int64 StringToValue(const std::string& name) const;
+		std::optional<int64> StringToValue(const std::string& name) const;
 
 		bool HasValue(int64 value) const { return m_values.find(value) != m_values.end(); }
 
@@ -62,11 +61,14 @@ namespace Meta
 		const std::string& GetName() const { return m_name; }
 		const std::unordered_map<int64, std::string>& GetValues() const { return m_values; }
 
+		ValuesMap::const_iterator begin() const { return m_values.begin(); }
+		ValuesMap::const_iterator end() const { return m_values.end(); }
+
 	private:
 
 		std::string m_name;
 
-		std::unordered_map<int64, std::string> m_values;
+		ValuesMap m_values;
 
 	};
 
@@ -114,7 +116,7 @@ namespace Meta
 		bool HasChild(const std::string& child) const;
 		bool HasChild(const Type* child) const;
 
-		template <EngineObject T, typename U>
+		template <typename T, typename U>
 		Type& AddProperty(const std::string& name, const std::string& type, U T::* ptr, std::initializer_list<Decorator> decorators = {})
 		{
 			auto prop = new Property{ name, type, (void* ObjectBase::*)(void* T::*)ptr, decorators };
@@ -226,11 +228,25 @@ namespace Meta
 template <typename T>
 inline bool ObjectBase::IsA() const
 {
-	return GetType()->HasParent(T::GetStaticType()) || GetType()->HasChild(T::GetStaticType()) || T::GetStaticType() == GetType();
+	if constexpr(std::is_base_of<ObjectBase, T>::value)
+	{
+		return T::GetStaticType() == GetType() || GetType()->HasChild(T::GetStaticType()) || GetType()->HasParent(T::GetStaticType());
+	}
+	else
+	{
+		static_assert(std::is_base_of<ObjectBase, T>, "T must be derived from ObjectBase");
+	}
 }
 
-template<EngineObject T, EngineObject U>
+template<typename T, typename U>
 inline T* SlowCast(U* object)
 {
-	return object && (object->GetType()->HasParent(T::GetType()) || object->GetType()->HasChild(T::GetType())) ? (T*)object : nullptr;
+	if constexpr (std::is_base_of<ObjectBase, T>::value && std::is_base_of<ObjectBase, U>::value)
+	{
+		return (object && (object->GetType()->HasParent(T::GetType()) || object->GetType()->HasChild(T::GetType()))) ? (T*)object : nullptr;
+	}
+	else
+	{
+		static_assert(std::is_base_of<ObjectBase, T>::value && std::is_base_of<ObjectBase, U>::value, "T and U must be derived from ObjectBase");
+	}
 }

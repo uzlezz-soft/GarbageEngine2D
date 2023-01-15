@@ -4,6 +4,7 @@
 
 static Random s_random;
 
+float Math::SmallNumber = 0.000001f;
 // There are never too many Pi digits... Muhahahha!
 float Math::Pi = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899f;
 float Math::PiHalf = Pi / 2.f;

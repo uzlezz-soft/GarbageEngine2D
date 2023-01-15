@@ -6,6 +6,8 @@ class GARBAGE_API Math final
 {
 public:
 
+	static float SmallNumber;
+
 	static float Pi;
 	static float PiHalf;
 	static float Rad2Deg;

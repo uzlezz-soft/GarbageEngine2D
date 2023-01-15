@@ -616,39 +616,6 @@ namespace GarbageHeaderTool
 
 	void Parser::DebugPrint()
 	{
-		/*for (auto it = m_structs.begin(); it != m_structs.end(); it++)
-		{
-			std::wcout << L"struct " << it->Name << L" {\n";
-
-			for (auto propIter = it->Properties.begin(); propIter != it->Properties.end(); propIter++)
-			{
-				for (uint8 i = 0; i < propIter->Decorators.size(); i++)
-				{
-					if (i > 0) std::wcout << L", ";
-					std::wcout << propIter->Decorators[i];
-				}
-
-				std::wcout << L"	Type<" << propIter->Type << L"> " << propIter->Identifier << L"\n";
-			}
-			std::wcout << L"}\n";
-		}
-
-		for (auto it = m_classes.begin(); it != m_classes.end(); it++)
-		{
-			std::wcout << L"class " << it->Name << L" {\n";
-
-			for (auto propIter = it->Properties.begin(); propIter != it->Properties.end(); propIter++)
-			{
-				for (uint8 i = 0; i < propIter->Decorators.size(); i++)
-				{
-					if (i > 0) std::wcout << L", ";
-					std::wcout << propIter->Decorators[i];
-				}
-
-				std::wcout << L"	Type<" << propIter->Type << L"> " << propIter->Identifier << L"\n";
-			}
-			std::wcout << L"}\n";
-		}*/
 	}
 
 	void Parser::Parse()

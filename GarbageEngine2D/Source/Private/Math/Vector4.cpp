@@ -303,22 +303,22 @@ Vector4 Vector4::Clamp(const Vector4& min, const Vector4& max) const
 	return Vector4(Math::Clamp(X, min.X, max.X), Math::Clamp(Y, min.Y, max.Y), Math::Clamp(Z, min.Z, max.Z), Math::Clamp(W, min.W, max.W));
 }
 
-Vector4 operator*(const Vector4& v, float n)
+GARBAGE_API Vector4 operator*(const Vector4& v, float n)
 {
 	return Vector4(v.X * n, v.Y * n, v.Z * n, v.W * n);
 }
 
-Vector4 operator*(float n, const Vector4& v)
+GARBAGE_API Vector4 operator*(float n, const Vector4& v)
 {
 	return operator*(v, n);
 }
 
-Vector4 operator/(const Vector4& v, float n)
+GARBAGE_API Vector4 operator/(const Vector4& v, float n)
 {
 	return (v.X / n, v.Y / n, v.Z / n, v.W / n);
 }
 
-Vector4 operator/(float n, const Vector4& v)
+GARBAGE_API Vector4 operator/(float n, const Vector4& v)
 {
 	return operator/(v, n);
 }

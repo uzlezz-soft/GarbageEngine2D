@@ -2,9 +2,7 @@
 
 #include "Core/FileSystem/FileSystem.h"
 #include <fstream>
-
-template <typename T>
-concept Arithmetic = std::is_arithmetic_v<T>;
+#include <type_traits>
 
 class GARBAGE_API PhysicalFile final : public File
 {
@@ -49,11 +47,18 @@ private:
 
 	std::fstream m_stream;
 
-	template <Arithmetic T>
+	template <typename T>
 	File& Read(T& data)
 	{
-		m_stream.read((char*)&data, sizeof(T));
-		return *this;
+		if constexpr (std::is_arithmetic<T>::value)
+		{
+			m_stream.read((char*)&data, sizeof(T));
+			return *this;
+		}
+		else
+		{
+			static_assert(std::is_arithmetic<T>::value, "T must be arithmetic type");
+		}
 	}
 
 	File& ReadString(std::string& data)
@@ -69,11 +74,18 @@ private:
 		return *this;
 	}
 
-	template <Arithmetic T>
+	template <typename T>
 	File& Write(T data)
 	{
-		m_stream.write((char*)&data, sizeof(T));
-		return *this;
+		if constexpr (std::is_arithmetic<T>::value)
+		{
+			m_stream.write((char*)&data, sizeof(T));
+			return *this;
+		}
+		else
+		{
+			static_assert(std::is_arithmetic<T>::value, "T must be arithmetic type");
+		}
 	}
 
 	File& WriteString(std::string_view data)

@@ -91,6 +91,7 @@ namespace GarbageHeaderTool
 
 		Parser(std::vector<Token>& tokens, const std::filesystem::path& path) : m_tokens(tokens), m_path(path) {}
 
+
 		std::wstring GenerateHeaderFile(std::wstring& outFileId, const std::filesystem::path& outputPath, std::wstring_view projectApi);
 		void DebugPrint();
 		void Parse();

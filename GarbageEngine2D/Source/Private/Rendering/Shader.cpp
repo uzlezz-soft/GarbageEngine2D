@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_set>
+#include <sstream>
 
 namespace Utils
 {
@@ -238,9 +239,9 @@ Shader::Shader(const Sources& sources, const Parameters& parameters) : m_id(0)
 	for (auto& shaderSource : sources)
 	{
 		Shader::Type type = shaderSource.first;
-		GARBAGE_CORE_ASSERT(!compiledShaders.contains(type));
+		GARBAGE_CORE_ASSERT(compiledShaders.find(type) == compiledShaders.end());
 
-		if (type == Shader::Type::Geometry) GARBAGE_CORE_ASSERT(!compiledShaders.contains(Shader::Type::Fragment), "Shader program already has fragment shader attached! Geometry shader should go first!");
+		if (type == Shader::Type::Geometry) GARBAGE_CORE_ASSERT(compiledShaders.find(Shader::Type::Fragment) == compiledShaders.end(), "Shader program already has fragment shader attached! Geometry shader should go first!");
 
 		std::stringstream ss;
 		ss << "#version 330 core\n";

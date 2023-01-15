@@ -21,7 +21,7 @@ namespace Meta
 
 	Enum& Enum::AddValue(const std::string& name, int64 value /*= -9223372036854775807 */)
 	{
-		if (value == -9223372036854775807 && !m_values.empty())
+		if (value == UnknownValue && !m_values.empty())
 		{
 			int64 lastValue = (--m_values.end())->first;
 			m_values[lastValue + 1] = name;
@@ -39,14 +39,14 @@ namespace Meta
 		return "Unknown";
 	}
 
-	int64 Enum::StringToValue(const std::string& name) const
+	std::optional<int64> Enum::StringToValue(const std::string& name) const
 	{
 		for (auto it = m_values.begin(); it != m_values.end(); ++it)
 		{
 			if (it->second == name) return it->first;
 		}
 
-		return UnknownValue;
+		return {};
 	}
 
 	bool Enum::HasValue(const std::string& name) const

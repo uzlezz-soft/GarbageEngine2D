@@ -23,7 +23,7 @@ public:
 	const std::filesystem::path& GetPath() const { return m_path; }
 	const std::filesystem::path& GetName() const { return m_name; }
 
-	bool JustLoadedFromSourceFile() const { return m_path.generic_string().starts_with("Source/"); }
+	bool JustLoadedFromSourceFile() const { return m_path.generic_string().find("Source/") == 0; }
 
 private:
 

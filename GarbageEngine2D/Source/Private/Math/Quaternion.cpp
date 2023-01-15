@@ -63,6 +63,7 @@ Vector3 Quaternion::RotateVector(const Vector3& v) const
 }
 
 // Fully and clearly stea...I mean, inspired from UE source
+// https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Private/Math/UnrealMath.cpp : 603
 Vector3 Quaternion::GetEulerAngles() const
 {
     Vector3 euler(0.0f);
@@ -108,11 +109,11 @@ Quaternion Quaternion::LookAt(Vector3 from, Vector3 to)
 
     float dot = forwardVector.Dot(Vector3::Forward);
 
-    if (Math::Abs(dot - (-1.0f)) < 0.000001f)
+    if (Math::Abs(dot - (-1.0f)) < Math::SmallNumber)
     {
         return Quaternion(Vector3::Up.X, Vector3::Up.Y, Vector3::Up.Z, Math::Pi);
     }
-    if (Math::Abs(dot - (1.0f)) < 0.000001f)
+    if (Math::Abs(dot - (1.0f)) < Math::SmallNumber)
     {
         return Quaternion::Identity;
     }
